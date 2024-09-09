@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdbool.h>
+
 // 节点结构体定义
 typedef struct _tag_lsNode
 {
@@ -49,3 +51,41 @@ void ls_list_append(const lsList *list, int data);
  * @param list 链表指针
  */
 void ls_list_print(const lsList *list);
+
+// 链表迭代器
+typedef struct
+{
+    lsNode *current;
+} lsListIterator;
+
+/**
+ * @brief 创建并初始化一个链表迭代器
+ * 
+ * @param list 需要迭代的链表指针
+ * @return lsListIterator 返回迭代器
+ */
+lsListIterator ls_list_iterator_start(const lsList *list);
+
+/**
+ * @brief 判断迭代器是否到达链表尾节点之后
+ * 
+ * @param it 迭代器指针
+ * @return true 迭代器已到达尾节点之后
+ * @return false 迭代器未到达尾节点之后
+ */
+bool ls_list_iterator_done(lsListIterator *it);
+
+/**
+ * @brief 迭代器前进一个节点
+ * 
+ * @param it 迭代器指针
+ */
+void ls_list_iterator_step(lsListIterator *it);
+
+/**
+ * @brief 通过迭代器获取当前节点数据
+ * 
+ * @param it 迭代器指针
+ * @return void* 返回节点数据指针
+ */
+void *ls_list_iterator_get_data(lsListIterator *it);
