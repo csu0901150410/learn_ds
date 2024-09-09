@@ -126,3 +126,27 @@ void ls_list_print(const lsList *list)
     }
     printf("list print end ...\n");
 }
+
+lsListIterator ls_list_iterator_start(const lsList *list)
+{
+    lsListIterator it;
+    it.current = (NULL == list) ? NULL : list->head->next;
+    return it;
+}
+
+bool ls_list_iterator_done(lsListIterator *it)
+{
+    return (NULL == it->current);
+}
+
+void ls_list_iterator_step(lsListIterator *it)
+{
+    assert(NULL != it->current);
+    it->current = it->current->next;
+}
+
+void *ls_list_iterator_get_data(lsListIterator *it)
+{
+    assert(NULL != it->current);
+    return &(it->current->data);
+}
