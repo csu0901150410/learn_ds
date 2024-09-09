@@ -44,6 +44,14 @@ void ls_list_destroy(lsList **root);
 void ls_list_append(const lsList *list, int data);
 
 /**
+ * @brief 链表头部追加节点
+ * 
+ * @param list 链表指针
+ * @param data 数据
+ */
+void ls_list_head_append(const lsList *list, int data);
+
+/**
  * @brief 链表打印
  * 
  * @param list 链表指针

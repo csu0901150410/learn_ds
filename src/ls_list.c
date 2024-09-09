@@ -87,6 +87,20 @@ void ls_list_append(const lsList *list, int data)
     curr->next = node;
 }
 
+void ls_list_head_append(const lsList *list, int data){
+    if(NULL==list)
+        return;
+    assert(list->head);
+
+    lsNode *Node = ls_node_create(data);
+    assert(Node);
+
+    lsNode *curr = list->head;
+    
+    Node->next = curr->next;
+    curr->next = Node;
+}
+
 // 这里的const是防止意外修改掉内部head指针的指向，导致链表被破坏
 void ls_list_print(const lsList *list)
 {
