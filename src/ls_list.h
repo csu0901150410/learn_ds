@@ -2,20 +2,23 @@
 
 #include <stdbool.h>
 
+// 函数指针，节点数据打印回调函数
+typedef void (*callback_node_print)(const void *);
+
 // 节点结构体定义
 typedef struct _tag_lsNode
 {
     struct _tag_lsNode *next;// 节点指针域  note : 这里涉及到不完全类型指针的使用
-    int data;// 节点数据域
+    void *data;// 节点数据域
 } lsNode;
 
 /**
  * @brief 节点创建
  * 
- * @param data 节点数据
+ * @param data 数据指针
  * @return lsNode* 返回节点指针
  */
-lsNode *ls_node_create(int data);
+lsNode *ls_node_create(void *data);
 
 // 链表结构体定义
 typedef struct
@@ -41,9 +44,9 @@ void ls_list_destroy(lsList **root);
  * @brief 链表尾部追加节点
  * 
  * @param list 链表指针
- * @param data 数据
+ * @param data 数据指针
  */
-void ls_list_append(const lsList *list, int data);
+void ls_list_append(const lsList *list, void *data);
 
 /**
  * @brief 链表头部追加节点
@@ -51,14 +54,14 @@ void ls_list_append(const lsList *list, int data);
  * @param list 链表指针
  * @param data 数据
  */
-void ls_list_prepend(const lsList *list, int data);
+void ls_list_prepend(const lsList *list, void *data);
 
 /**
  * @brief 链表打印
  * 
  * @param list 链表指针
  */
-void ls_list_print(const lsList *list);
+void ls_list_print(const lsList *list, callback_node_print cb);
 
 // 链表迭代器
 typedef struct

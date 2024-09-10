@@ -3,32 +3,42 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// int型数据节点打印函数
+void node_int_print(const void *data)
+{
+    printf("value : %d\n", *(int*)data);
+}
+
 void test_list_basic()
 {
     lsList *list = ls_list_create();
 
-    ls_list_append(list, 1);
-    ls_list_append(list, 2);
-    ls_list_append(list, 3);
-    ls_list_append(list, 4);
-    ls_list_prepend(list,5);
-    ls_list_prepend(list,6);
+    int a[10] = {1, 2, 3, 4, 5, 6};
 
-    ls_list_print(list);
+    ls_list_append(list, a + 0);
+    ls_list_append(list, a + 1);
+    ls_list_append(list, a + 2);
+    ls_list_append(list, a + 3);
+    ls_list_prepend(list, a + 4);
+    ls_list_prepend(list, a + 5);
+
+    ls_list_print(list, node_int_print);
 
     ls_list_destroy(&list);
 
-    ls_list_print(list);// 再次打印，因链表已经销毁，所以没有输出了
+    ls_list_print(list, node_int_print);// 再次打印，因链表已经销毁，所以没有输出了
 }
 
 void test_list_iterator()
 {
     lsList *list = ls_list_create();
 
-    ls_list_append(list, 1);
-    ls_list_append(list, 2);
-    ls_list_append(list, 3);
-    ls_list_append(list, 4);
+    int a[10] = {1, 2, 3, 4, 5, 6};
+
+    ls_list_append(list, &a[0]);
+    ls_list_append(list, a + 1);
+    ls_list_append(list, a + 2);
+    ls_list_append(list, a + 3);
 
     // 用迭代器遍历链表，自定义打印
     for (lsListIterator it = ls_list_iterator_start(list); !ls_list_iterator_done(&it); ls_list_iterator_step(&it))
@@ -44,7 +54,9 @@ void test_list_iterator()
 
 int main()
 {
-    test_list_iterator();
+    // test_list_iterator();
+
+    test_list_basic();
 
     return 0;
 }
