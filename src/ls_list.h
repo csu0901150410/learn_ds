@@ -51,7 +51,7 @@ void ls_list_append(const lsList *list, int data);
  * @param list 链表指针
  * @param data 数据
  */
-void ls_list_head_append(const lsList *list, int data);
+void ls_list_prepend(const lsList *list, int data);
 
 /**
  * @brief 链表打印

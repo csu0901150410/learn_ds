@@ -11,8 +11,8 @@ void test_list_basic()
     ls_list_append(list, 2);
     ls_list_append(list, 3);
     ls_list_append(list, 4);
-    ls_list_head_append(list,5);
-    ls_list_head_append(list,6);
+    ls_list_prepend(list,5);
+    ls_list_prepend(list,6);
 
     ls_list_print(list);
 
