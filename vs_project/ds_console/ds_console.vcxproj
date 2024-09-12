@@ -19,7 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ls_brush.c" />
+    <ClCompile Include="ls_shapes.c" />
     <ClCompile Include="ls_window.c" />
+    <ClCompile Include="ls_pen.c" />
     <ClCompile Include="src\ls_arc.c" />
     <ClCompile Include="src\ls_entity.c" />
     <ClCompile Include="src\ls_line_segment.c" />
@@ -30,7 +33,10 @@
     <ClCompile Include="test_ls_window.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ls_brush.h" />
+    <ClInclude Include="ls_shapes.h" />
     <ClInclude Include="ls_window.h" />
+    <ClInclude Include="ls_pen.h" />
     <ClInclude Include="src\ls_arc.h" />
     <ClInclude Include="src\ls_defs.h" />
     <ClInclude Include="src\ls_entity.h" />

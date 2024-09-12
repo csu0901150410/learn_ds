@@ -36,6 +36,15 @@
     <ClCompile Include="test_ls_window.c">
       <Filter>test</Filter>
     </ClCompile>
+    <ClCompile Include="ls_pen.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="ls_brush.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="ls_shapes.c">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ls_list.h">
@@ -57,6 +66,15 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="ls_window.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="ls_pen.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="ls_brush.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="ls_shapes.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,97 +1,108 @@
 #include "ls_window.h"
+#include "ls_shapes.h"
 
 // 窗口过程函数，处理窗口的消息
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    switch (uMsg)
-    {
-    case WM_DESTROY:  // 处理窗口销毁消息
-        PostQuitMessage(0);
-        return 0;
+	switch (uMsg)
+	{
+	case WM_DESTROY:  // 处理窗口销毁消息
+		PostQuitMessage(0);
+		return 0;
 
-    case WM_PAINT:    // 处理绘画消息
-    {
-        PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(hwnd, &ps);
+	case WM_PAINT:    // 处理绘画消息
+	{
+		PAINTSTRUCT ps;
+		HDC hdc = BeginPaint(hwnd, &ps);
 
-        // 在这里进行绘图操作(创建、选择、使用、恢复、销毁)
-        HPEN hPen = CreatePen(PS_SOLID,2,RGB(255,0,0));//画笔
-        HGDIOBJ oldPen = SelectObject(hdc,hPen);
+		lsPoint  point, start, end, center, LT_point, RB_point, LT_point_ell, RB_point_ell;
 
-        HBRUSH hBrush = CreateSolidBrush(RGB(0,255,0));
-        HGDIOBJ oldBursh = SelectObject(hdc,hBrush);
+		point= ls_point_create(50, 200);
+		start = ls_point_create(100, 200);
+		end = ls_point_create(200, 300);
+		LT_point = ls_point_create(400, 200);
+		RB_point = ls_point_create(570, 300);
 
-        //绘制矩形
-        Rectangle(hdc,50,50,100,100);
+		LT_point_ell = ls_point_create(400, 370);
+		RB_point_ell = ls_point_create(370, 400);
 
-        //绘制椭圆
-        Ellipse(hdc,200,50,400,150);
+		center = ls_point_create(650, 200);
+		int radius = 100;
 
-        //绘制直线
-        MoveToEx(hdc,50,200,NULL);//起点
-        LineTo(hdc,200,300);
+		lsPoint points[] = {{100, 100}, {150, 50}, {200, 100}, {175, 150}, {125, 150}};
+		int numPionts = 5;
 
-        SelectObject(hdc,oldPen);
-        SelectObject(hdc,oldBursh);
+		lsLineSegment line = *ls_line_segment_create(start, end);
 
+		//绘制一个红点
+		draw_point(hdc, point , RGB(255, 0, 0));
 
-        DeleteObject(hPen);
-        DeleteObject(hBrush);
- 
-        EndPaint(hwnd, &ps);
+		//绘制线段
+		draw_line(hdc, line, RGB(0, 255, 0));
 
-        return 0;
-    }
- 
+		// 绘制矩形
+		draw_rect(hdc, LT_point, RB_point, RGB(0, 0, 255));
 
-    // 调用默认的窗口过程
-    default:
-        return DefWindowProc(hwnd, uMsg, wParam, lParam);
-    }
- 
+		// 绘制圆形
+		void draw_cricle(hdc, center, radius, RGB（255，0，0）);
+
+		// 绘制椭圆
+		void draw_ellipss(hdc, LT_point_ell, RB_point_ell, RGB（255，0，255）);
+
+		// 绘制多边形
+		void draw_polygon(hdc, points, numPionts, RGB（0，255，255）);
+
+		EndPaint(hwnd, &ps);
+
+		return 0;
+	}
+
+	// 调用默认的窗口过程
+	default:
+		return DefWindowProc(hwnd, uMsg, wParam, lParam);
+	}
 }
 
 // 注册窗口类
 void RegisterWindowClass(HINSTANCE hInstance, const wchar_t* className)
 {
-    WNDCLASS wc = { 0 };
-    wc.lpfnWndProc = WindowProc;
-    wc.hInstance = hInstance;
-    wc.lpszClassName = className;
-    wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	WNDCLASS wc = { 0 };
+	wc.lpfnWndProc = WindowProc;
+	wc.hInstance = hInstance;
+	wc.lpszClassName = className;
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 
-    if (!RegisterClass(&wc))
-    {
-        OutputDebugString(L"RegisterClass failed");
-    }
-    RegisterClass(&wc);
+	if (!RegisterClass(&wc))
+	{
+		OutputDebugString(L"RegisterClass failed");
+	}
+	RegisterClass(&wc);
 }
 
 // 创建应用程序窗口
 HWND CreateAppWindow(HINSTANCE hInstance, const wchar_t* className, int nCmdShow)
 {
-    HWND hwnd = CreateWindowEx(
-        0,
-        className,
-        L"My First Window",
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-        NULL,
-        NULL,
-        hInstance,
-        NULL
-    );
-   
+	HWND hwnd = CreateWindowEx(
+		0,
+		className,
+		L"My First Window",
+		WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+		NULL,
+		NULL,
+		hInstance,
+		NULL
+	);
 
-    if (hwnd != NULL)
-    {
-        ShowWindow(hwnd, nCmdShow);
-        UpdateWindow(hwnd);
-    }
-    else
-    {
-        OutputDebugString(L"CreateWindowEx failed");
-    }
-     return hwnd;
+	if (hwnd != NULL)
+	{
+		ShowWindow(hwnd, nCmdShow);
+		UpdateWindow(hwnd);
+	}
+	else
+	{
+		OutputDebugString(L"CreateWindowEx failed");
+	}
+	return hwnd;
 }
