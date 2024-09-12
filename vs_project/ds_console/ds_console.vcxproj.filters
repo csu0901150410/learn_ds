@@ -15,10 +15,54 @@
     <ClCompile Include="test\test_ls_list.c">
       <Filter>test</Filter>
     </ClCompile>
+    <ClCompile Include="test\test_ls_entity.c">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ls_arc.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ls_entity.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ls_line_segment.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ls_vector.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="ls_window.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="test_ls_window.c">
+      <Filter>test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ls_list.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\ls_arc.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ls_defs.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ls_entity.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ls_line_segment.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ls_vector.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="ls_window.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test\test_ls_entity.exe">
+      <Filter>test</Filter>
+    </None>
   </ItemGroup>
 </Project>

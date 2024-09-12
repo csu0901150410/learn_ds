@@ -19,11 +19,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ls_window.c" />
+    <ClCompile Include="src\ls_arc.c" />
+    <ClCompile Include="src\ls_entity.c" />
+    <ClCompile Include="src\ls_line_segment.c" />
     <ClCompile Include="src\ls_list.c" />
+    <ClCompile Include="src\ls_vector.c" />
+    <ClCompile Include="test\test_ls_entity.c" />
     <ClCompile Include="test\test_ls_list.c" />
+    <ClCompile Include="test_ls_window.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ls_window.h" />
+    <ClInclude Include="src\ls_arc.h" />
+    <ClInclude Include="src\ls_defs.h" />
+    <ClInclude Include="src\ls_entity.h" />
+    <ClInclude Include="src\ls_line_segment.h" />
     <ClInclude Include="src\ls_list.h" />
+    <ClInclude Include="src\ls_vector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test\test_ls_entity.exe" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

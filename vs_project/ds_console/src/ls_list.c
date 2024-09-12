@@ -1,10 +1,10 @@
-﻿#include "ls_list.h"
+#include "ls_list.h"
 
 #include <stdio.h>// for printf
 #include <stdlib.h>// for malloc free
 #include <assert.h>// for assert
 
-lsNode *ls_node_create(int data)
+lsNode *ls_node_create(void *data)
 {
     lsNode *node = (lsNode *)malloc(sizeof(lsNode));
     assert(node);
@@ -18,7 +18,7 @@ lsList *ls_list_create()
     lsList *list = (lsList *)malloc(sizeof(lsList));
     assert(list);
 
-    lsNode *head = ls_node_create(0);
+    lsNode *head = ls_node_create(NULL);
     assert(head);
     list->head = head;
     return list;
@@ -62,7 +62,7 @@ void ls_list_destroy(lsList **root)
 }
 
 // 这里的const是防止意外修改掉内部head指针的指向，导致链表被破坏
-void ls_list_append(const lsList *list, int data)
+void ls_list_append(const lsList *list, void *data)
 {
     if (NULL == list)
         return;
@@ -87,22 +87,22 @@ void ls_list_append(const lsList *list, int data)
     curr->next = node;
 }
 
-void ls_list_head_append(const lsList *list, int data){
+void ls_list_prepend(const lsList *list, void *data){
     if(NULL==list)
         return;
     assert(list->head);
 
-    lsNode *Node = ls_node_create(data);
-    assert(Node);
+    lsNode *node = ls_node_create(data);
+    assert(node);
 
     lsNode *curr = list->head;
     
-    Node->next = curr->next;
-    curr->next = Node;
+    node->next = curr->next;
+    curr->next = node;
 }
 
 // 这里的const是防止意外修改掉内部head指针的指向，导致链表被破坏
-void ls_list_print(const lsList *list)
+void ls_list_print(const lsList *list, callback_node_print cb)
 {
     if (NULL == list)
         return;
@@ -119,7 +119,7 @@ void ls_list_print(const lsList *list)
             break;
 
         // 具体的打印动作
-        printf("index : %d, value : %d\n", index++, curr->data);
+        cb(curr->data);
 
         // 迭代，当前节点移动到下一个节点
         curr = curr->next;
@@ -148,5 +148,5 @@ void ls_list_iterator_step(lsListIterator *it)
 void *ls_list_iterator_get_data(lsListIterator *it)
 {
     assert(NULL != it->current);
-    return &(it->current->data);
+    return it->current->data;
 }
