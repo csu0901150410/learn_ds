@@ -4,9 +4,10 @@
 
 #include "windows.h"
 
-typedef struct {
-	COLORREF color;
-}Brush;
+typedef struct
+{
+    COLORREF color;
+} Brush;
 
 HBRUSH ls_brush_Create(Brush brush);
 

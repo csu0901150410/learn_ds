@@ -1,8 +1,8 @@
 ﻿#include "ls_list.h"
 
-#include <stdio.h>// for printf
-#include <stdlib.h>// for malloc free
-#include <assert.h>// for assert
+#include <stdio.h>  // for printf
+#include <stdlib.h> // for malloc free
+#include <assert.h> // for assert
 
 lsNode *ls_node_create(void *data)
 {
@@ -34,7 +34,7 @@ void ls_list_destroy(lsList **root)
     lsList *list = *root;
     if (NULL == list)
         return;
-    
+
     // 链表内部从头节点开始，删除链表上的所有挂载的节点
     lsNode *curr = list->head;
     while (1)
@@ -66,7 +66,7 @@ void ls_list_append(const lsList *list, void *data)
 {
     if (NULL == list)
         return;
-    assert(list->head);// 链表只要创建了，头节点指针就不能为空，也就是链表内部一定有一个头节点存在
+    assert(list->head); // 链表只要创建了，头节点指针就不能为空，也就是链表内部一定有一个头节点存在
 
     lsNode *node = ls_node_create(data);
     assert(node);
@@ -87,8 +87,9 @@ void ls_list_append(const lsList *list, void *data)
     curr->next = node;
 }
 
-void ls_list_prepend(const lsList *list, void *data){
-    if(NULL==list)
+void ls_list_prepend(const lsList *list, void *data)
+{
+    if (NULL == list)
         return;
     assert(list->head);
 
@@ -96,7 +97,7 @@ void ls_list_prepend(const lsList *list, void *data){
     assert(node);
 
     lsNode *curr = list->head;
-    
+
     node->next = curr->next;
     curr->next = node;
 }

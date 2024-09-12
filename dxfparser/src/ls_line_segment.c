@@ -1,11 +1,11 @@
 ﻿#include "ls_line_segment.h"
 
-#include <stdlib.h>// for malloc
-#include <assert.h>// for assert
+#include <stdlib.h> // for malloc
+#include <assert.h> // for assert
 
 lsLineSegment *ls_line_segment_create(lsVector start, lsVector end)
 {
-    lsLineSegment *seg = (lsLineSegment*)malloc(sizeof(lsLineSegment));
+    lsLineSegment *seg = (lsLineSegment *)malloc(sizeof(lsLineSegment));
     assert(seg);
 
     seg->s = start;

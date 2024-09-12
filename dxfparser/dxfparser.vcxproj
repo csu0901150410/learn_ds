@@ -28,7 +28,7 @@
     <ClCompile Include="src\ls_shapes.c" />
     <ClCompile Include="src\ls_vector.c" />
     <ClCompile Include="src\ls_window.c" />
-    <ClCompile Include="src\test_ls_window.c" />
+    <ClCompile Include="src\app.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ls_arc.h" />

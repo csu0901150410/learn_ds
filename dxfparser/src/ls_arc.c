@@ -1,11 +1,11 @@
 ﻿#include "ls_arc.h"
 
-#include <stdlib.h>// for malloc
-#include <assert.h>// for assert
+#include <stdlib.h> // for malloc
+#include <assert.h> // for assert
 
 lsArc *ls_arc_create(lsVector start, lsVector end, lsVector center, bool bccw)
 {
-    lsArc *arc = (lsArc*)malloc(sizeof(lsArc));
+    lsArc *arc = (lsArc *)malloc(sizeof(lsArc));
     assert(arc);
 
     arc->s = start;

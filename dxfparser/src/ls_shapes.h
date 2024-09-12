@@ -23,6 +23,6 @@ void draw_cricle(HDC hdc, lsPoint center, int radius, COLORREF color);
 void draw_ellipss(HDC hdc, lsPoint LT_point, lsPoint RB_point, COLORREF color);
 
 // 绘制多边形
-void draw_polygon(HDC hdc, POINT* points, int numPionts, COLORREF color);
+void draw_polygon(HDC hdc, lsPoint *points, int numPionts, COLORREF color);
 
 #endif // !LS_SHAPES_H

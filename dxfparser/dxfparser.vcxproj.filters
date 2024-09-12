@@ -33,7 +33,7 @@
     <ClCompile Include="src\ls_window.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\test_ls_window.c">
+    <ClCompile Include="src\app.c">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

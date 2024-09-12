@@ -2,7 +2,7 @@
 
 #include "ls_vector.h"
 
-#include <stdbool.h>// for bool
+#include <stdbool.h> // for bool
 
 typedef struct
 {

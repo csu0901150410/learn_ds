@@ -3,10 +3,11 @@
 #define LS_PEN_H
 
 #include <windows.h>
-typedef struct {
-    int style;     
-    int width;    
-    COLORREF color; 
+typedef struct
+{
+    int style;
+    int width;
+    COLORREF color;
 } Pen;
 
 // 创建画笔
