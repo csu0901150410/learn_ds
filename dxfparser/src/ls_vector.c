@@ -1,4 +1,4 @@
-#include "ls_vector.h"
+﻿#include "ls_vector.h"
 
 lsPoint ls_point_create(lsReal x, lsReal y)
 {

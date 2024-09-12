@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef LS_BRUSH_H
 #define LS_BRUSH_H
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ls_vector.h"
 #include "ls_line_segment.h"

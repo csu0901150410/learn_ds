@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #ifndef LS_SHAPES_H
 #define LS_SHAPES_H
 
@@ -7,22 +7,22 @@
 #include "src/ls_arc.h"
 #include "windows.h"
 
-// »æÖÆµã
+// ç»˜åˆ¶ç‚¹
 void draw_point(HDC hdc, lsPoint point, COLORREF color);
 
-// »æÖÆÏß¶Î
+// ç»˜åˆ¶çº¿æ®µ
 void draw_line(HDC hdc, lsLineSegment line, COLORREF color);
 
-// »æÖÆ¾ØÐÎ
+// ç»˜åˆ¶çŸ©å½¢
 void draw_rect(HDC hdc, lsPoint LT_point, lsPoint RB_point, COLORREF color);
 
-// »æÖÆÔ²ÐÎ
+// ç»˜åˆ¶åœ†å½¢
 void draw_cricle(HDC hdc, lsPoint center, int radius, COLORREF color);
 
-// »æÖÆÍÖÔ²
+// ç»˜åˆ¶æ¤­åœ†
 void draw_ellipss(HDC hdc, lsPoint LT_point, lsPoint RB_point, COLORREF color);
 
-// »æÖÆ¶à±ßÐÎ
+// ç»˜åˆ¶å¤šè¾¹å½¢
 void draw_polygon(HDC hdc, POINT* points, int numPionts, COLORREF color);
 
 #endif // !LS_SHAPES_H

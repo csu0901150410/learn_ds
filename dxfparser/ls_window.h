@@ -1,15 +1,15 @@
-#pragma once
+ï»¿#pragma once
 #ifndef LS_WINDOW_H
 #define LS_WINDOW_H
 
 #include <windows.h>
 
-// ´°¿Ú¹ı³Ìº¯ÊıµÄÉùÃ÷
+// çª—å£è¿‡ç¨‹å‡½æ•°çš„å£°æ˜
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-//×¢²á
+//æ³¨å†Œ
 void RegisterWindowClass(HINSTANCE hInstance, const wchar_t* className);
 
-//´´½¨
+//åˆ›å»º
 HWND CreateAppWindow(HINSTANCE hInstance, const wchar_t* className, int nCmdShow);
 #endif 

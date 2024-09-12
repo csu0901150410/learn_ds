@@ -1,16 +1,16 @@
-#include "ls_window.h"
+ï»¿#include "ls_window.h"
 #include "ls_shapes.h"
 
-// ´°¿Ú¹ı³Ìº¯Êı£¬´¦Àí´°¿ÚµÄÏûÏ¢
+// çª—å£è¿‡ç¨‹å‡½æ•°ï¼Œå¤„ç†çª—å£çš„æ¶ˆæ¯
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_DESTROY:  // ´¦Àí´°¿ÚÏú»ÙÏûÏ¢
+	case WM_DESTROY:  // å¤„ç†çª—å£é”€æ¯æ¶ˆæ¯
 		PostQuitMessage(0);
 		return 0;
 
-	case WM_PAINT:    // ´¦Àí»æ»­ÏûÏ¢
+	case WM_PAINT:    // å¤„ç†ç»˜ç”»æ¶ˆæ¯
 	{
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hwnd, &ps);
@@ -34,36 +34,36 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		lsLineSegment line = *ls_line_segment_create(start, end);
 
-		//»æÖÆÒ»¸öºìµã
+		//ç»˜åˆ¶ä¸€ä¸ªçº¢ç‚¹
 		draw_point(hdc, point , RGB(255, 0, 0));
 
-		//»æÖÆÏß¶Î
+		//ç»˜åˆ¶çº¿æ®µ
 		draw_line(hdc, line, RGB(0, 255, 0));
 
-		// »æÖÆ¾ØĞÎ
+		// ç»˜åˆ¶çŸ©å½¢
 		draw_rect(hdc, LT_point, RB_point, RGB(0, 0, 255));
 
-		// »æÖÆÔ²ĞÎ
-		void draw_cricle(hdc, center, radius, RGB£¨255£¬0£¬0£©);
+		// ç»˜åˆ¶åœ†å½¢
+		void draw_cricle(hdc, center, radius, RGBï¼ˆ255ï¼Œ0ï¼Œ0ï¼‰);
 
-		// »æÖÆÍÖÔ²
-		void draw_ellipss(hdc, LT_point_ell, RB_point_ell, RGB£¨255£¬0£¬255£©);
+		// ç»˜åˆ¶æ¤­åœ†
+		void draw_ellipss(hdc, LT_point_ell, RB_point_ell, RGBï¼ˆ255ï¼Œ0ï¼Œ255ï¼‰);
 
-		// »æÖÆ¶à±ßĞÎ
-		void draw_polygon(hdc, points, numPionts, RGB£¨0£¬255£¬255£©);
+		// ç»˜åˆ¶å¤šè¾¹å½¢
+		void draw_polygon(hdc, points, numPionts, RGBï¼ˆ0ï¼Œ255ï¼Œ255ï¼‰);
 
 		EndPaint(hwnd, &ps);
 
 		return 0;
 	}
 
-	// µ÷ÓÃÄ¬ÈÏµÄ´°¿Ú¹ı³Ì
+	// è°ƒç”¨é»˜è®¤çš„çª—å£è¿‡ç¨‹
 	default:
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
 }
 
-// ×¢²á´°¿ÚÀà
+// æ³¨å†Œçª—å£ç±»
 void RegisterWindowClass(HINSTANCE hInstance, const wchar_t* className)
 {
 	WNDCLASS wc = { 0 };
@@ -80,7 +80,7 @@ void RegisterWindowClass(HINSTANCE hInstance, const wchar_t* className)
 	RegisterClass(&wc);
 }
 
-// ´´½¨Ó¦ÓÃ³ÌĞò´°¿Ú
+// åˆ›å»ºåº”ç”¨ç¨‹åºçª—å£
 HWND CreateAppWindow(HINSTANCE hInstance, const wchar_t* className, int nCmdShow)
 {
 	HWND hwnd = CreateWindowEx(

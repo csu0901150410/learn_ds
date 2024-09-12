@@ -1,21 +1,21 @@
-#include "ls_shapes.h"
+Ôªø#include "ls_shapes.h"
 
-// ªÊ÷∆µ„
+// ÁªòÂà∂ÁÇπ
 void draw_point(HDC hdc, lsPoint point, COLORREF color) {
 	SetPixel(hdc,point.x,point.y,color);
 }
 
-// ªÊ÷∆œﬂ∂Œ
+// ÁªòÂà∂Á∫øÊÆµ
 void draw_line(HDC hdc, lsLineSegment line, COLORREF color) {
-	HPEN hpen = CreatePen(PS_SOLID,2,color);//¥¥Ω®
-	HGDIOBJ oldPen = SelectObject(hdc,hpen);//—°‘Ò
-	MoveToEx(hdc, line.s.x, line.s.y,NULL);// π”√
+	HPEN hpen = CreatePen(PS_SOLID,2,color);//ÂàõÂª∫
+	HGDIOBJ oldPen = SelectObject(hdc,hpen);//ÈÄâÊã©
+	MoveToEx(hdc, line.s.x, line.s.y,NULL);//‰ΩøÁî®
 	LineTo(hdc, line.e.x, line.e.y);
-	SelectObject(hdc, oldPen);//ª÷∏¥
+	SelectObject(hdc, oldPen);//ÊÅ¢Â§ç
 	DeleteObject(hpen);
 }
 
-// ªÊ÷∆æÿ–Œ
+// ÁªòÂà∂Áü©ÂΩ¢
 void draw_rect(HDC hdc, lsPoint LT_point, lsPoint RB_point, COLORREF color) {
 	HBRUSH hBrush = CreateSolidBrush(color);
 	HGDIOBJ oldBrush = SelectObject(hdc, hBrush);
@@ -24,7 +24,7 @@ void draw_rect(HDC hdc, lsPoint LT_point, lsPoint RB_point, COLORREF color) {
 	DeleteObject(hBrush);
 }
 
-// ªÊ÷∆‘≤–Œ
+// ÁªòÂà∂ÂúÜÂΩ¢
 void draw_cricle(HDC hdc, lsPoint center, int radius, COLORREF color) {
 	HBRUSH hBrush = CreateSolidBrush(color);
 	HGDIOBJ oldBrush = SelectObject(hdc, hBrush);
@@ -32,7 +32,7 @@ void draw_cricle(HDC hdc, lsPoint center, int radius, COLORREF color) {
 	SelectObject(hdc, oldBrush);
 	DeleteObject(hBrush);
 }
-// ªÊ÷∆Õ÷‘≤
+// ÁªòÂà∂Ê§≠ÂúÜ
 void draw_ellipss(HDC hdc, lsPoint LT_point, lsPoint RB_point, COLORREF color){
 	HBRUSH hBrush = CreateSolidBrush(color);
 	HGDIOBJ oldBrush = SelectObject(hdc, hBrush);
@@ -40,7 +40,7 @@ void draw_ellipss(HDC hdc, lsPoint LT_point, lsPoint RB_point, COLORREF color){
 	SelectObject(hdc, oldBrush);
 	DeleteObject(hBrush);
 }
-// ªÊ÷∆∂‡±ﬂ–Œ
+// ÁªòÂà∂Â§öËæπÂΩ¢
 void draw_polygon(HDC hdc, POINT* points, int numPionts, COLORREF color) {
 	HBRUSH hBrush = CreateSolidBrush(color);
 	HGDIOBJ oldBrush = SelectObject(hdc, hBrush);

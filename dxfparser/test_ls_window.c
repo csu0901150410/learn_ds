@@ -1,4 +1,4 @@
-// ³ÌĞòÈë¿Úµã
+ï»¿// ç¨‹åºå…¥å£ç‚¹
 #include "ls_window.h"
 
 #include <stdio.h>
@@ -6,7 +6,7 @@
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
-    // ×¢²á´°¿ÚÀà
+    // æ³¨å†Œçª—å£ç±»
     const wchar_t CLASS_NAME[] = L"Sample Window Class";
 
     RegisterWindowClass(hInstance, CLASS_NAME);
@@ -17,7 +17,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
         return 0;
     }
 
-    // ÏûÏ¢Ñ­»·
+    // æ¶ˆæ¯å¾ªç¯
     MSG msg = { 0 };
     while (GetMessage(&msg, NULL, 0, 0))
     {

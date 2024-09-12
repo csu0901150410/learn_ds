@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #ifndef LS_PEN_H
 #define LS_PEN_H
 
@@ -9,10 +9,10 @@ typedef struct {
     COLORREF color; 
 } Pen;
 
-// ´´½¨»­±Ê
+// åˆ›å»ºç”»ç¬”
 HPEN ls_Pen_Create(Pen pen);
 
-// ÊÍ·Å»­±Ê
+// é‡Šæ”¾ç”»ç¬”
 void ls_Pen_Destroy(HPEN hPen);
 
 #endif

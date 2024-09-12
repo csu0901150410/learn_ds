@@ -1,4 +1,4 @@
-#include "../src/ls_list.h"
+﻿#include "../src/ls_list.h"
 #include "../src/ls_entity.h"
 
 #include <stdio.h>

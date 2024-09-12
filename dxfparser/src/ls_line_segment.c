@@ -1,4 +1,4 @@
-#include "ls_line_segment.h"
+﻿#include "ls_line_segment.h"
 
 #include <stdlib.h>// for malloc
 #include <assert.h>// for assert

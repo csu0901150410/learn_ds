@@ -1,4 +1,4 @@
-#include "ls_brush.h"
+﻿#include "ls_brush.h"
 
 HBRUSH ls_brush_Create(Brush brush) {
 	return CreateSolidBrush(brush.color);
