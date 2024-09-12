@@ -5,5 +5,5 @@ HBRUSH ls_brush_Create(Brush brush) {
 }
 
 void ls_brush_Destroy(HBRUSH hBrush) {
-	return DeleteObject(hBrush);
+	DeleteObject(hBrush);
 }

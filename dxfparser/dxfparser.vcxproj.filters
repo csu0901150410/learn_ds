@@ -4,19 +4,10 @@
     <Filter Include="src">
       <UniqueIdentifier>{f9c71b48-a596-433d-ae94-1e878c04eb67}</UniqueIdentifier>
     </Filter>
-    <Filter Include="test">
-      <UniqueIdentifier>{8eff0a3b-5266-48e5-b5db-765fca1cc0ab}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ls_list.c">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="test\test_ls_list.c">
-      <Filter>test</Filter>
-    </ClCompile>
-    <ClCompile Include="test\test_ls_entity.c">
-      <Filter>test</Filter>
     </ClCompile>
     <ClCompile Include="src\ls_arc.c">
       <Filter>src</Filter>
@@ -30,19 +21,19 @@
     <ClCompile Include="src\ls_vector.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="ls_window.c">
+    <ClCompile Include="src\ls_brush.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="test_ls_window.c">
-      <Filter>test</Filter>
-    </ClCompile>
-    <ClCompile Include="ls_pen.c">
+    <ClCompile Include="src\ls_pen.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="ls_brush.c">
+    <ClCompile Include="src\ls_shapes.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="ls_shapes.c">
+    <ClCompile Include="src\ls_window.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\test_ls_window.c">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,22 +56,17 @@
     <ClInclude Include="src\ls_vector.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="ls_window.h">
+    <ClInclude Include="src\ls_brush.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="ls_pen.h">
+    <ClInclude Include="src\ls_pen.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="ls_brush.h">
+    <ClInclude Include="src\ls_shapes.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="ls_shapes.h">
+    <ClInclude Include="src\ls_window.h">
       <Filter>src</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="test\test_ls_entity.exe">
-      <Filter>test</Filter>
-    </None>
   </ItemGroup>
 </Project>

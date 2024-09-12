@@ -2,9 +2,9 @@
 #ifndef LS_SHAPES_H
 #define LS_SHAPES_H
 
-#include "src/ls_vector.h"
-#include "src/ls_line_segment.h"
-#include "src/ls_arc.h"
+#include "ls_vector.h"
+#include "ls_line_segment.h"
+#include "ls_arc.h"
 #include "windows.h"
 
 // 绘制点
