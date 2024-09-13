@@ -79,4 +79,7 @@
   <ItemGroup>
     <ResourceCompile Include="dxfparser.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="dxf\Wolf_One_dxf.dxf" />
+  </ItemGroup>
 </Project>

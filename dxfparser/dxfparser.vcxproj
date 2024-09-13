@@ -48,6 +48,9 @@
   <ItemGroup>
     <ResourceCompile Include="dxfparser.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="dxf\Wolf_One_dxf.dxf" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
