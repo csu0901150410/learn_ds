@@ -18,8 +18,10 @@ int copy_dxf_file(const char* source_path, const char* target_path) {
 
 	//逐行读取并写入
 	char buffer[1024];//每行的大小
-	while (fgets(&buffer, sizeof(buffer), source_file) != NULL) {
-		fputs(&buffer, target_file);
+	// fgets和fputs第一个参数类型是char *的，而&buffer类型是char (*)[1024]，即指向数组的指针类型，二者类型不匹配，不能传入&buffer
+	// 而数组名buffer在使用时会退化成指向第一个元素的指针，其类型是char *，可以类型匹配
+	while (fgets(buffer, sizeof(buffer), source_file) != NULL) {
+		fputs(buffer, target_file);
 	}
 
 	fclose(source_file);

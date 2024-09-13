@@ -89,8 +89,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	// 调用默认的窗口过程
 	default:
-		return DefWindowProc(hwnd, uMsg, wParam, lParam);
+		break;
 	}
+
+	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
 // 注册窗口类
