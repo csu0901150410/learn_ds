@@ -36,6 +36,9 @@
     <ClCompile Include="src\app.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\dxf_io.c">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ls_list.h">
@@ -68,5 +71,12 @@
     <ClInclude Include="src\ls_window.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\dxf_io.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="dxfparser.rc" />
   </ItemGroup>
 </Project>

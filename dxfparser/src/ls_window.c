@@ -1,5 +1,6 @@
 ﻿#include "ls_window.h"
 #include "ls_shapes.h"
+#include "dxf_io.h"
 
 #include <math.h>
 
@@ -10,7 +11,14 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
+    case WM_CREATE:
+        // 在窗口创建时执行 DXF 读取和写入
+        copy_dxf_file("E:\vsLife\\dxf\\source.dxf", "E:\vsLife\\dxf\\target.dxf");
+        break;
+   
     case WM_DESTROY: // 处理窗口销毁消息
+        copy_dxf_file("E:\vsLife\\dxf\\source.dxf", "E:\vsLife\\dxf\\target.dxf");
+        
         PostQuitMessage(0);
         return 0;
 
