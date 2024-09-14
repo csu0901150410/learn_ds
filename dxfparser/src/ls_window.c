@@ -1,6 +1,8 @@
-﻿#include "ls_window.h"
+﻿
+#include "ls_window.h"
 #include "ls_shapes.h"
 #include "dxf_io.h"
+#include "ls_list.h"
 
 #include <math.h>
 
@@ -11,6 +13,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	char* source_path = "Wolf_One_dxf.dxf";
 	char* target_path = "target.dxf";
+	lsList* list = ls_list_create();
+
 	switch (uMsg)
 	{
 	case WM_CREATE:
@@ -19,8 +23,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		copy_dxf_file(source_path, target_path);
 
 		//MessageBox(hwnd, "窗口创建，开始处理 DXF 文件", "信息", MB_OK);//会乱码
-		// 使用宽字符并调用宽字符版本的 MessageBoxW
 		MessageBoxW(hwnd, L"窗口创建，开始处理 DXF 文件", L"信息", MB_OK);
+		
+		parser_dxf(target_path, list);
+		//MessageBox(hwnd, "", "信息", MB_OK);
+		MessageBoxW(hwnd, L"解析 DXF 文件", L"信息", MB_OK);
+		ls_list_destroy(&list);
+
 		break;
 
 	case WM_DESTROY: // 处理窗口销毁消息

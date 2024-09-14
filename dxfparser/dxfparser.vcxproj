@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dxf_io.c" />
+    <ClCompile Include="src\dxf_parser.c" />
     <ClCompile Include="src\ls_arc.c" />
     <ClCompile Include="src\ls_brush.c" />
     <ClCompile Include="src\ls_entity.c" />
@@ -34,6 +35,7 @@
   <ItemGroup>
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\dxf_io.h" />
+    <ClInclude Include="src\dxf_parser.h" />
     <ClInclude Include="src\ls_arc.h" />
     <ClInclude Include="src\ls_brush.h" />
     <ClInclude Include="src\ls_defs.h" />
