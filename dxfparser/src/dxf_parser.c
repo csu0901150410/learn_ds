@@ -1,63 +1,66 @@
-#include "dxf_parser.h"
+ï»¿#include "dxf_parser.h"
 #include <stdio.h>
 #include <stdlib.h>//malloc
-#include < math.h >
+#include <math.h>
+#include <string.h>// for strcmp
+
+#include "ls_log.h"
 
 int parser_dxf(const char* target_file_path, lsList* list) {
-	//È¡ÎÄ¼ş
+	//å–æ–‡ä»¶
 	FILE* fileName = NULL;
 	if (0 != fopen_s( &fileName ,target_file_path, "r"))
 	{
-		perror("ÎÄ¼ş¶ÁÈëÊ§°Ü");
+		perror("æ–‡ä»¶è¯»å…¥å¤±è´¥");
 		return 1;
 	}
 
-	int code;//×éÂë
-	char rowBuffer[1024];//Ã¿ĞĞµÄ´óĞ¡,´æ´¢
-	lsLineSegment curr_line;//Ïß¶Î½á¹¹Ìå±äÁ¿
-	int isParserLine = 0;//±êÊ¶ÊÇ·ñÕıÔÚ½âÎöLNIEÊµÌå
+	int code;//ç»„ç 
+	char rowBuffer[1024];//æ¯è¡Œçš„å¤§å°,å­˜å‚¨
+	lsLineSegment curr_line;//çº¿æ®µç»“æ„ä½“å˜é‡
+	int isParserLine = 0;//æ ‡è¯†æ˜¯å¦æ­£åœ¨è§£æLNIEå®ä½“
 
-	//ÖğĞĞ½âÎö,½«½âÎöÊı¾İ´æÈërowBuffer
+	//é€è¡Œè§£æ,å°†è§£ææ•°æ®å­˜å…¥rowBuffer
 	while (fgets(rowBuffer, sizeof(rowBuffer), fileName)) {
 		code = atoi(rowBuffer);
-		if (!fgets(rowBuffer, sizeof(rowBuffer), fileName))//½âÎöµ½ĞĞÄ©£¬Ìø³ö±¾´ÎÑ­»·
+		if (!fgets(rowBuffer, sizeof(rowBuffer), fileName))//è§£æåˆ°è¡Œæœ«ï¼Œè·³å‡ºæœ¬æ¬¡å¾ªç¯
 			break;
 
-		//´¦Àí×æÂë¶ÁÈ¡ºóµÄÖµ
-		if (code == 0 && strcmp(code, "LINE\n") == 0) {
-			isParserLine = 1;//ÕıÔÚÊ¶±ğÊµÌå¡ª¡ª¿ªÊ¼
+		//å¤„ç†ç¥–ç è¯»å–åçš„å€¼
+		if (code == 0 && strcmp(rowBuffer, "LINE\n") == 0) {
+			isParserLine = 1;//æ­£åœ¨è¯†åˆ«å®ä½“â€”â€”å¼€å§‹
 			continue;
 		}
 
-		if (isParserLine)//Ê¶±ğÊµÌåºóµÄ²Ù×÷
+		if (isParserLine)//è¯†åˆ«å®ä½“åçš„æ“ä½œ
 		{
 			switch (code)
 			{
-				//	ÆğµãÓëÖÕµãµÄ×ø±ê½âÎöµ½Ïß¶Î½á¹¹Ìå±äÁ¿
+				//	èµ·ç‚¹ä¸ç»ˆç‚¹çš„åæ ‡è§£æåˆ°çº¿æ®µç»“æ„ä½“å˜é‡
 			case 10:
-				curr_line.s.x = atof(rowBuffer);
+				curr_line.s.x = (lsReal)atof(rowBuffer);
 				break;
 			case 20:
-				curr_line.s.y = atof(rowBuffer);
+				curr_line.s.y = (lsReal)atof(rowBuffer);
 				break;
 			case 30:
-				curr_line.s.z = atof(rowBuffer);
+				curr_line.s.z = (lsReal)atof(rowBuffer);
 				break;
 			case 11:
-				curr_line.e.x = atof(rowBuffer);
+				curr_line.e.x = (lsReal)atof(rowBuffer);
 				break;
 			case 21:
-				curr_line.e.y = atof(rowBuffer);
+				curr_line.e.y = (lsReal)atof(rowBuffer);
 				break;
 			case 31:
-				curr_line.e.z = atof(rowBuffer);
+				curr_line.e.z = (lsReal)atof(rowBuffer);
 				break;
 
-				//	×éÂëÎª0£ºËµÃ÷ÊÇÒ»¸öĞÂµÄÊµÌåµÄ¿ªÊ¼
+				//	ç»„ç ä¸º0ï¼šè¯´æ˜æ˜¯ä¸€ä¸ªæ–°çš„å®ä½“çš„å¼€å§‹
 			case 0:
-				if (strcmp(rowBuffer, "LINE\n") != 0) {//Ïß¶Î½âÎö½áÊø
+				if (strcmp(rowBuffer, "LINE\n") != 0) {//çº¿æ®µè§£æç»“æŸ
 					ls_list_append(list, &curr_line);
-					isParserLine = 0;//ÊµÌå½âÎö±êÊ¶·ûÖÃ0£»
+					isParserLine = 0;//å®ä½“è§£ææ ‡è¯†ç¬¦ç½®0ï¼›
 				}
 				break;
 			default:
@@ -65,4 +68,27 @@ int parser_dxf(const char* target_file_path, lsList* list) {
 			}
 		}
 	}
+
+	return 0;
+}
+
+#define MAX_BUF_SIZE 1024
+void test_read_dxf(const char *filename)
+{
+	FILE *fp = NULL;
+	errno_t error;
+	error = fopen_s(&fp ,filename, "r");
+	if (0 != error)
+	{
+		ls_log_info("File %s read failed!\n", filename);
+		return;
+	}
+	
+	char buf[MAX_BUF_SIZE] = {0};
+	while (NULL != fgets(buf, sizeof(buf), fp))
+	{
+		ls_log_info("Read line : %s", buf);
+	}
+
+	return;
 }

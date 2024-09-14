@@ -4,26 +4,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+#include <tchar.h>
+
+#include "ls_log.h"
+#include "dxf_parser.h"
+
+int APIENTRY _tWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ PWSTR pCmdLine, _In_ int nCmdShow)
 {
-    // 注册窗口类
-    const wchar_t CLASS_NAME[] = L"Sample Window Class";
+    test_read_dxf("dxf/bridge.dxf");
+    ls_log_info("hello world\n");
 
-    RegisterWindowClass(hInstance, CLASS_NAME);
+    //// 注册窗口类
+    //const wchar_t CLASS_NAME[] = L"Sample Window Class";
 
-    HWND hwnd = CreateAppWindow(hInstance, CLASS_NAME, nCmdShow);
-    if (hwnd == NULL)
-    {
-        return 0;
-    }
+    //RegisterWindowClass(hInstance, CLASS_NAME);
 
-    // 消息循环
-    MSG msg = {0};
-    while (GetMessage(&msg, NULL, 0, 0))
-    {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }
+    //HWND hwnd = CreateAppWindow(hInstance, CLASS_NAME, nCmdShow);
+    //if (hwnd == NULL)
+    //{
+    //    return 0;
+    //}
+
+    //// 消息循环
+    //MSG msg = {0};
+    //while (GetMessage(&msg, NULL, 0, 0))
+    //{
+    //    TranslateMessage(&msg);
+    //    DispatchMessage(&msg);
+    //}
 
     return 0;
 }

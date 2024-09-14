@@ -39,6 +39,12 @@
     <ClCompile Include="src\dxf_io.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\dxf_parser.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ls_log.c">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ls_list.h">
@@ -75,6 +81,12 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="src\dxf_parser.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ls_log.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dxfparser.rc" />

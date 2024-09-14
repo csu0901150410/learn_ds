@@ -26,6 +26,7 @@
     <ClCompile Include="src\ls_entity.c" />
     <ClCompile Include="src\ls_line_segment.c" />
     <ClCompile Include="src\ls_list.c" />
+    <ClCompile Include="src\ls_log.c" />
     <ClCompile Include="src\ls_pen.c" />
     <ClCompile Include="src\ls_shapes.c" />
     <ClCompile Include="src\ls_vector.c" />
@@ -42,6 +43,7 @@
     <ClInclude Include="src\ls_entity.h" />
     <ClInclude Include="src\ls_line_segment.h" />
     <ClInclude Include="src\ls_list.h" />
+    <ClInclude Include="src\ls_log.h" />
     <ClInclude Include="src\ls_pen.h" />
     <ClInclude Include="src\ls_shapes.h" />
     <ClInclude Include="src\ls_vector.h" />
@@ -142,7 +144,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>

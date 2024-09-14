@@ -1,12 +1,14 @@
-#ifndef DXF_PARSER_H
+ï»¿#ifndef DXF_PARSER_H
 #define DXF_PARSER_H
 
 #include "ls_vector.h"
 #include "ls_line_segment.h"
 #include "ls_list.h"
 
-//½âÎödxfÎÄ¼ş¡£
-// ²ÎÊı£ºfile_Path£ºÒª½âÎöµÄÎÄ¼ş£¨Â·¾¶£©£¬lines:½á¹¹ÌåÖ¸Õë,½âÎöÏß¶ÎµÄ±£´æ
-int parser_dxf(const char* file_path, lsList **head);
+//è§£ædxfæ–‡ä»¶ã€‚
+// å‚æ•°ï¼šfile_Pathï¼šè¦è§£æçš„æ–‡ä»¶ï¼ˆè·¯å¾„ï¼‰ï¼Œlines:ç»“æ„ä½“æŒ‡é’ˆ,è§£æçº¿æ®µçš„ä¿å­˜
+int parser_dxf(const char* file_path, lsList *list);
+
+void test_read_dxf(const char *filename);
 
 #endif 
