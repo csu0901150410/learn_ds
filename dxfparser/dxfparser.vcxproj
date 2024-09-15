@@ -31,6 +31,7 @@
     <ClCompile Include="src\ls_log.c" />
     <ClCompile Include="src\ls_pen.c" />
     <ClCompile Include="src\ls_shapes.c" />
+    <ClCompile Include="src\ls_utils.c" />
     <ClCompile Include="src\ls_vector.c" />
     <ClCompile Include="src\ls_window.c" />
     <ClCompile Include="src\app.c" />
@@ -51,6 +52,7 @@
     <ClInclude Include="src\ls_log.h" />
     <ClInclude Include="src\ls_pen.h" />
     <ClInclude Include="src\ls_shapes.h" />
+    <ClInclude Include="src\ls_utils.h" />
     <ClInclude Include="src\ls_vector.h" />
     <ClInclude Include="src\ls_window.h" />
   </ItemGroup>

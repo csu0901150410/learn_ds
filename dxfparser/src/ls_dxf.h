@@ -72,4 +72,39 @@ bool ls_dxf_read_group_code(lsDxf *dxf, int *code);
  */
 bool ls_dxf_read_row_string(lsDxf *dxf);
 
+/**
+ * @brief 获取当前组码对应的字符串
+ * 
+ * @param dxf lsDxf结构体指针
+ * @return const char* 返回内部字符数组的首元素地址，避免直接访问内部字符数组
+ */
+const char *ls_dxf_get_row_string(lsDxf *dxf);
+
+/**
+ * @brief dxf文件解析
+ * 
+ * @param dxf lsDxf结构体指针
+ * @return true 解析成功
+ * @return false 解析失败
+ */
+bool ls_dxf_parse(lsDxf *dxf);
+
+/**
+ * @brief dxf解析处理ENTITY
+ * 
+ * @param dxf lsDxf结构体指针
+ * @return true 处理成功
+ * @return false 处理失败
+ */
+bool ls_dxf_process_entity(lsDxf *dxf);
+
+/**
+ * @brief dxf解析处理LINE
+ * 
+ * @param dxf lsDxf结构体指针
+ * @return true 处理成功
+ * @return false处理失败
+ */
+bool ls_dxf_process_line(lsDxf *dxf);
+
 #endif// __LS_DXF_H__

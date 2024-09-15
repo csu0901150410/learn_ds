@@ -3,6 +3,9 @@
 
 #include "ls_dxf.h"
 #include "ls_log.h"
+#include "ls_utils.h"
+
+#include "ls_line_segment.h"
 
 bool ls_dxf_init(lsDxf *dxf, const char *filename)
 {
@@ -59,4 +62,108 @@ bool ls_dxf_read_row_string(lsDxf *dxf)
         return false;
     
     return !ferror(dxf->fp);// ferror返回非0，表示出错
+}
+
+const char *ls_dxf_get_row_string(lsDxf *dxf)
+{
+    return dxf->str;
+}
+
+bool ls_dxf_parse(lsDxf *dxf)
+{
+    int code;
+    const char *rowString = NULL;
+    while (1)
+    {
+        if (!ls_dxf_read_record(dxf, &code))
+            break;// 读取结束或者读取完毕，退出循环
+
+        if (0 == code)
+        {
+            rowString = ls_dxf_get_row_string(dxf);
+
+            // dxf文件解析到最后一行EOF，结束解析
+            if (ls_utils_is_string_equal(rowString, "EOF"))
+                return true;
+
+            // dxf数据从 [0 : SECTION] 开始
+            // see [https://help.autodesk.com/view/ACD/2023/CHS/?guid=GUID-D939EA11-0CEC-4636-91A8-756640A031D3]
+            if (ls_utils_is_string_equal(rowString, "SECTION"))
+            {
+                ls_dxf_read_record(dxf, &code);
+
+                // 识别到 [2 : ENTITY] 则处理图元数据段
+                if (2 == code)
+                {
+                    rowString = ls_dxf_get_row_string(dxf);
+                    if (ls_utils_is_string_equal(rowString, "ENTITIES"))
+                        ls_dxf_process_entity(dxf);
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+bool ls_dxf_process_entity(lsDxf *dxf)
+{
+    int code;
+    const char *rowString = NULL;
+    while (1)
+    {
+        if (!ls_dxf_read_record(dxf, &code))
+            return false;
+
+        // 遇到 [0 : ENDSEC] 则当前段数据结束
+        if (0 == code && ls_utils_is_string_equal(rowString, "ENDSEC"))
+            return true;
+
+        // 处理线段
+        if (ls_utils_is_string_equal(rowString, "LINE"))
+        {
+            ls_dxf_process_line(dxf);
+        }
+    }
+
+    return true;
+}
+
+bool ls_dxf_process_line(lsDxf *dxf)
+{
+    int code;
+    const char *rowString = NULL;
+    lsLineSegment segment = { {0, 0}, {1, 1} };
+    while (1)
+    {
+        if (!ls_dxf_read_record(dxf, &code))
+            return false;
+
+        switch (code)
+        {
+        case 0:
+        {
+            // 遇到组码0，表示当前线段数据段结束，线段解析完毕
+            ls_log_info("Segment coord info, x : %.3f, y : %.3f\n", segment.s.x, segment.s.y);
+            return true;
+        }
+        break;
+
+        case 10:
+        {
+            // 取x坐标数据
+            //segment.x = xxx;
+        }
+        break;
+
+        case 20:
+        {
+            // 取y坐标数据
+            //segment.y = xxx;
+        }
+        break;
+        }
+    }
+
+    return true;
 }
