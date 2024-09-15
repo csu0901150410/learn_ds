@@ -1,12 +1,12 @@
-#ifndef LS_CONDITION_H
+ï»¿#ifndef LS_CONDITION_H
 #define LS_CONDITION_H
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-//É¸Ñ¡£º×éÂëÎª 0 ²¢ÇÒÖµÎª "LINE" Ê±É¸Ñ¡³öÀ´
+//ç­›é€‰ï¼šç»„ç ä¸º 0 å¹¶ä¸”å€¼ä¸º "LINE" æ—¶ç­›é€‰å‡ºæ¥
 int line_entity_condition(int code, const char* value);
-//É¸Ñ¡: Ö¸¶¨×ø±êµÄĞĞ
+//ç­›é€‰: æŒ‡å®šåæ ‡çš„è¡Œ
 int coordinate_condition(int code, const char* value);
 #endif 

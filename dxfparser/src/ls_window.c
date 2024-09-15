@@ -22,17 +22,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		// 在窗口创建时执行 DXF 读取和写入
 
-		copy_dxf_file(source_path, target_path);
+		/*copy_dxf_file(source_path, target_path);
 
-		//MessageBox(hwnd, "窗口创建，开始处理 DXF 文件", "信息", MB_OK);//会乱码
-		//MessageBoxW(hwnd, L"窗口创建，开始处理 DXF 文件", L"信息", MB_OK);
 		MessageBox(hwnd, TEXT("窗口创建，开始处理 DXF 文件"), TEXT("信息"), MB_OK);
-		
+
 		parser_dxf(target_path, list);
-		//MessageBox(hwnd, "", "信息", MB_OK);
-		//MessageBoxW(hwnd, L"解析 DXF 文件", L"信息", MB_OK);
 		MessageBox(hwnd, TEXT("解析 DXF 文件"), TEXT("信息"), MB_OK);
-		ls_list_destroy(&list);
+		ls_list_destroy(&list);*/
 
 		break;
 

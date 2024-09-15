@@ -48,6 +48,9 @@
     <ClCompile Include="src\ls_condition.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ls_dxf.c">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ls_list.h">
@@ -91,6 +94,12 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\ls_condition.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ls_common.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ls_dxf.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

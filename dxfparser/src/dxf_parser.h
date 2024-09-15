@@ -20,7 +20,7 @@ typedef int (*EntityProcessor)(DxfCodePair* codePair);
 
 //解析dxf文件。
 // 参数：file_Path：要解析的文件（路径），lines:结构体指针,解析线段的保存
-int parser_dxf(const char* file_path, lsList *list);
+int parser_dxf(const char* file_path, EntityProcessor processor);
 
 void filter_dxf_with_condion(FILE* fp, EntityProcessor processor);
 void test_read_dxf(const char *filename);
