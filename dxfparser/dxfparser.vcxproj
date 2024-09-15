@@ -23,6 +23,7 @@
     <ClCompile Include="src\dxf_parser.c" />
     <ClCompile Include="src\ls_arc.c" />
     <ClCompile Include="src\ls_brush.c" />
+    <ClCompile Include="src\ls_condition.c" />
     <ClCompile Include="src\ls_entity.c" />
     <ClCompile Include="src\ls_line_segment.c" />
     <ClCompile Include="src\ls_list.c" />
@@ -39,6 +40,7 @@
     <ClInclude Include="src\dxf_parser.h" />
     <ClInclude Include="src\ls_arc.h" />
     <ClInclude Include="src\ls_brush.h" />
+    <ClInclude Include="src\ls_condition.h" />
     <ClInclude Include="src\ls_defs.h" />
     <ClInclude Include="src\ls_entity.h" />
     <ClInclude Include="src\ls_line_segment.h" />

@@ -45,6 +45,9 @@
     <ClCompile Include="src\ls_log.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ls_condition.c">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ls_list.h">
@@ -85,6 +88,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\ls_log.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ls_condition.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
