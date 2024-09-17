@@ -23,5 +23,6 @@
  * @return false 字符串不等
  */
 bool ls_utils_is_string_equal(const char* str1, const char* str2);
+bool ls_utils_is_string_equal_n(const char* str1, const char* str2, int num);
 
 #endif// __LS_UTILS_H__
