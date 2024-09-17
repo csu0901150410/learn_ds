@@ -124,7 +124,7 @@ bool RegisterWindowClass(HINSTANCE hInstance, const TCHAR *className)
 
     if (!RegisterClass(&wc))
     {
-        ls_log_info("RegisterClass failed");
+        ls_log_info("RegisterClass failed\n");
         return false;
     }
     return true;
@@ -151,7 +151,7 @@ HWND CreateAppWindow(HINSTANCE hInstance, const TCHAR *className, int nCmdShow)
     }
     else
     {
-        ls_log_info("CreateWindowEx failed");
+        ls_log_info("CreateWindowEx failed\n");
     }
     return hwnd;
 }
