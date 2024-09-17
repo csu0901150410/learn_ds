@@ -31,6 +31,8 @@ void ls_entity_destroy(lsEntity **root)
 {
     if (NULL == root || NULL == *root)
         return;
+    if ((*root)->entity)
+        free((*root)->entity);// 要考虑调用每个实体具体的释放函数
     free(*root);
     *root = NULL;
 }

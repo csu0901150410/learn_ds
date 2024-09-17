@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 #include "ls_common.h"
+#include "ls_list.h"
 
 /**
  * @brief dxf文件读取结构体及相关函数设计
@@ -24,7 +25,22 @@ typedef struct
 {
     FILE *fp;// dxf文件指针
     char str[MAX_BUF_SIZE];// 缓存从dxf读到的行数据，组码之后的数据
+    lsList *list;
 } lsDxf;
+
+/**
+ * @brief 在堆中申请lsDxf结构体
+ * 
+ * @return lsDxf* 返回lsDxf结构体指针
+ */
+lsDxf *ls_dxf_create();
+
+/**
+ * @brief 销毁申请的lsDxf结构体堆内存
+ * 
+ * @param root 指向lsDxf结构体指针的指针变量
+ */
+void ls_dxf_destroy(lsDxf **root);
 
 /**
  * @brief 初始化lsDxf结构体

@@ -1,11 +1,30 @@
 ﻿#include <string.h> // for memset
 #include <stdlib.h> // for atoi
+#include <assert.h> // for assert
 
 #include "ls_dxf.h"
 #include "ls_log.h"
 #include "ls_utils.h"
 
 #include "ls_line_segment.h"
+#include "ls_entity.h"
+
+lsDxf *ls_dxf_create()
+{
+    lsDxf *dxf = (lsDxf*)malloc(sizeof(lsDxf));
+    assert(dxf);
+    return dxf;
+}
+
+void ls_dxf_destroy(lsDxf **root)
+{
+    if (NULL == root || NULL == *root)
+        return;
+
+    ls_dxf_deinit(*root);
+    free(*root);
+    *root = NULL;
+}
 
 bool ls_dxf_init(lsDxf *dxf, const char *filename)
 {
@@ -20,14 +39,32 @@ bool ls_dxf_init(lsDxf *dxf, const char *filename)
     }
 
     memset(dxf->str, 0, MAX_BUF_SIZE);
+
+    dxf->list = ls_list_create();
+
     return true;
 }
 
 void ls_dxf_deinit(lsDxf *dxf)
 {
+    if (NULL == dxf)
+        return;
+
     // 文件打开之后一定要记得关闭
     if (NULL != dxf->fp)
         fclose(dxf->fp);
+
+    // 释放图元
+    for (lsListIterator it = ls_list_iterator_start(dxf->list); !ls_list_iterator_done(&it); ls_list_iterator_step(&it))
+    {
+        lsEntity *ent = (lsEntity*)ls_list_iterator_get_data(&it);
+        if (NULL == ent)
+            continue;
+        ls_entity_destroy(&ent);
+    }
+
+    // 释放链表
+    ls_list_destroy(&dxf->list);
 }
 
 bool ls_dxf_read_record(lsDxf *dxf, int *code)
@@ -148,7 +185,7 @@ bool ls_dxf_process_entity(lsDxf *dxf)
 bool ls_dxf_process_line(lsDxf *dxf)
 {
     int code;
-    lsLineSegment segment = {{0, 0}, {1, 1}};
+    lsPoint start = {0, 0}, end = {0, 0};
 
     while (1)
     {
@@ -159,9 +196,13 @@ bool ls_dxf_process_line(lsDxf *dxf)
         {
         case 0:
         {
+            lsEntity *pEnt = ls_entity_create_segment(start, end);
+            assert(pEnt);
+            ls_list_append(dxf->list, pEnt);
+
             // 遇到组码0，表示当前线段数据段结束，线段解析完毕
-            ls_log_info("Segment start, x : %f, y : %f\n", segment.s.x, segment.s.y);
-            ls_log_info("Segment end, x : %f, y : %f\n", segment.e.x, segment.e.y);
+			// ls_log_info("Segment start, x : %f, y : %f\n", start.x, start.y);
+			// ls_log_info("Segment end, x : %f, y : %f\n", end.x, end.y);
             return true; // 返回，其实这时候下一个LINE的Record已经读取到了，让外部循环重新进入调用当前函数的分支即可
         }
         break;
@@ -169,25 +210,25 @@ bool ls_dxf_process_line(lsDxf *dxf)
         // 只读取二维坐标，不处理z
         case 10:
         {
-            segment.s.x = (lsReal)atof(ls_dxf_get_row_string(dxf));
+            start.x = (lsReal)atof(ls_dxf_get_row_string(dxf));
         }
         break;
 
         case 20:
         {
-            segment.s.y = (lsReal)atof(ls_dxf_get_row_string(dxf));
+            start.y = (lsReal)atof(ls_dxf_get_row_string(dxf));
         }
         break;
 
         case 11:
         {
-            segment.e.x = (lsReal)atof(ls_dxf_get_row_string(dxf));
+            end.x = (lsReal)atof(ls_dxf_get_row_string(dxf));
         }
         break;
 
         case 21:
         {
-            segment.e.y = (lsReal)atof(ls_dxf_get_row_string(dxf));
+            end.y = (lsReal)atof(ls_dxf_get_row_string(dxf));
         }
         break;
         }
