@@ -63,22 +63,8 @@ void draw_arc(HDC hdc, lsArc arc, COLORREF color) {
 }
 
 // 绘制闭合多边形
-void draw_polygon(HDC hdc, lsPolygon polygon, COLORREF color)
+void draw_polygon(HDC hdc, lsPolygon *polygon, COLORREF color)
 {
-    if (polygon.pointCount < 2)
-        return;
-
-    HBRUSH hBrush = CreateSolidBrush(color);
-    HGDIOBJ oldBrush = SelectObject(hdc, hBrush);
-
-    MoveToEx(hdc, (int)polygon.points[0].x, (int)polygon.points[0].y, NULL);//起点
-    for (int i = 1; i < polygon.pointCount - 1; i++)
-    {
-        LineTo(hdc, (int)polygon.points[i + 1].x, (int)polygon.points[i + 1].y);//连到下一个点
-    }
-    LineTo(hdc, (int)polygon.points[0].x, (int)polygon.points[0].y);//连到起点
-
-    SelectObject(hdc, oldBrush);
-    DeleteObject(hBrush);
-
+    // 把每一条线画出来
+    
 }

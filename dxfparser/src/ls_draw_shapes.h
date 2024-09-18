@@ -25,6 +25,6 @@ void draw_ellipss(HDC hdc, lsPoint LT_point, lsPoint RB_point, COLORREF color);
 void draw_arc(HDC hdc, lsArc arc, COLORREF color);
 
 // 绘制多边形
-void draw_polygon(HDC hdc, lsPolygon polygon, COLORREF color);
+void draw_polygon(HDC hdc, lsPolygon *polygon, COLORREF color);
 
 // !LS_SHAPES_H

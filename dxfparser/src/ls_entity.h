@@ -4,6 +4,7 @@
 #include "ls_line_segment.h"
 #include "ls_arc.h"
 #include "ls_list.h"
+#include "ls_polygon.h"
 
 typedef enum
 {
@@ -22,5 +23,7 @@ lsEntity *ls_entity_create_segment(lsVector start, lsVector end);
 
 lsEntity *ls_entity_create_arc(lsVector start, lsVector end, lsVector center, bool bccw);
 
-lsEntity* ls_entity_create_polygon(lsList* points);
+// 这些create函数，遵循一个规则，比方说这里是 polygon to entity，那么形参一定是polygon
+lsEntity *ls_entity_create_polygon(lsPolygon *polygon);
+
 void ls_entity_destroy(lsEntity **root);

@@ -9,6 +9,7 @@
 #include "ls_line_segment.h"
 #include "ls_entity.h"
 #include "ls_list.h"
+#include "ls_polygon.h"
 
 lsDxf *ls_dxf_create()
 {
@@ -175,7 +176,7 @@ bool ls_dxf_process_entity(lsDxf *dxf)
         else if (ls_utils_is_string_equal_n(rowString, "LWPOLYLINE", 10))
             ls_dxf_process_polygon(dxf);
             
-            // 其他的数据，不关心，再读一行
+        // 其他的数据，不关心，再读一行
         else
         {
             if (!ls_dxf_read_record(dxf, &code))
@@ -308,40 +309,95 @@ bool ls_dxf_process_arc(lsDxf* dxf) {
     return true;
 }
 
-
-bool ls_dxf_process_polygon(lsDxf* dxf) {
+// Ref : [https://help.autodesk.com/view/ACD/2023/CHS/?guid=GUID-748FC305-F3F2-4F74-825A-61F04D757A50]
+bool ls_dxf_process_polygon(lsDxf* dxf)
+{
     int code;
-    lsList *points = ls_list_create();
+    const char *rowString = NULL;
+
+    // 默认开曲线
+    bool bClosed = false;
+    int vertexNum = 0;
+    lsPoint start = {0, 0}, end = {0, 0}, first = {0, 0};
+    int count = 0;// 顶点计数
+    
+    lsPolygon *polygon = ls_polygon_create();
 
     while (1)
     {
         if (!ls_dxf_read_record(dxf, &code))
+            return false;
+            
+        rowString = ls_dxf_get_row_string(dxf);
+        if (NULL == rowString)
             return false;
 
         switch (code)
         {
         case 0:
         {
-            lsEntity * polygon = ls_entity_create_polygon(points);//将点的链表封装成实体
-            assert(polygon);
-            ls_list_append(dxf->list, polygon);
+            // polygon读取结束，转成entity加入图元链表
+
+            // 如果是闭合多边形，还要加一条边
+            if (bClosed && vertexNum > 2)
+            {
+                lsLineSegment seg = {first, end};
+                ls_polygon_append_seg(polygon, seg);
+            }
+            
+            lsEntity *pEnt = ls_entity_create_polygon(polygon);
+            ls_list_append(dxf->list, pEnt);
             return true;
         }
-        case 10:
+        
+        // 组码90，顶点个数
+        case 90:
         {
-            // lsVector point = {0, 0};//一个新点
-            // 新分配一个点,因为这个点没有直接放入dxf, point = {0, 0}是栈内存会被清除，得换成堆内存。
-            lsVector* point = (lsVector*)malloc(sizeof(lsVector));
-            assert(point);
-            point->x = (lsReal)atof(ls_dxf_get_row_string(dxf));
-            ls_list_append(points, point);
+            vertexNum = atoi(rowString);
         }
         break;
+
+        // 组码70，0表示开曲线，1表示闭合曲线，闭合曲线时首位两点需要连一条线
+        case 70:
+        {
+            int value = atoi(rowString);
+            if (1 == value)
+                bClosed = true;
+        }
+        break;
+        
+        case 10:
+        {
+            // 除了第一次读取，其余的这个值都给end，因为后续的读取，都会将上次读取的点作为start
+            if (0 == count)
+            {
+                start.x = (lsReal)atof(rowString);
+            }
+            else
+            {
+                end.x = (lsReal)atof(rowString);
+            }
+        }
+        break;
+        
         case 20:
         {
-            lsVector *point = (lsVector*)ls_list_last(points);
-            assert(point);
-            point->y = (lsReal)atof(ls_dxf_get_row_string(dxf));
+            if (0 == count)
+            {
+                start.y = (lsReal)atof(rowString);
+                first = start;// 记录第一点，以便闭合的情况下，与最后一点构成一段线段
+            }
+            else
+            {
+                end.y = (lsReal)atof(rowString);
+
+                // 不是第一次读，则已经读到了start，生成一条边，并且以当前结束点作为开始点
+                lsLineSegment seg = {start, end};
+                ls_polygon_append_seg(polygon, seg);
+                start = end;
+            }
+
+            count++;
         }
         break;
         }

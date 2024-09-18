@@ -199,15 +199,23 @@ void ls_window_draw_shapes(HDC hdc, const lsDxf *dxf)
                 lsPolygon* polygon = (lsPolygon*)entity->entity;
                 if (NULL != polygon)
                 {
-                    lsPolygon scaledPolygon = *polygon;
-                    for (int i = 0; i < polygon->pointCount; i++)
+                    // draw_polygon(hdc, polygon, RGB(0, 0, 255));
+                    for (lsListIterator it = ls_list_iterator_start(polygon->edges); !ls_list_iterator_done(&it); ls_list_iterator_step(&it))
                     {
-                        scaledPolygon.points[i].x *= 1000;
-                        scaledPolygon.points[i].y *= 1000;
-                        scaledPolygon.points[i].x += 400;
-                        scaledPolygon.points[i].y += 400;
+                        lsLineSegment* pSeg = (lsLineSegment*)ls_list_iterator_get_data(&it);
+
+                        lsLineSegment seg = *pSeg;
+                        seg.s.x *= 0.1;
+                        seg.s.y *= 0.1;
+                        seg.e.x *= 0.1;
+                        seg.e.y *= 0.1;
+                        seg.s.x += 0;
+                        seg.s.y += 0;
+                        seg.e.x += 0;
+                        seg.e.y += 0;
+                        ls_log_info("draw line : s(%f, %f), e(%f, %f)\n", seg.s.x, seg.s.y, seg.e.x, seg.e.y);
+                        draw_line(hdc, seg, RGB(255, 0, 0));
                     }
-                    draw_polygon(hdc, scaledPolygon, RGB(0, 0, 255));
                 }
             }
             break;
