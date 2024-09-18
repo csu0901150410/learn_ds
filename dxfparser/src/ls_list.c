@@ -151,3 +151,28 @@ void *ls_list_iterator_get_data(lsListIterator *it)
     assert(NULL != it->current);
     return it->current->data;
 }
+
+void* ls_list_last(const lsList* list)
+{
+    if (NULL == list || NULL == list->head || NULL == list->head->next)
+        return NULL;
+
+    // 初始化迭代器，从链表开始位置
+    lsListIterator it = ls_list_iterator_start(list);
+
+    if (ls_list_iterator_done(&it))
+        return NULL;
+
+    void* lastData = NULL;
+
+    // 遍历链表
+    while (!ls_list_iterator_done(&it))
+    {
+        lastData = ls_list_iterator_get_data(&it);
+
+        ls_list_iterator_step(&it);
+    }
+
+    // 返回最后一个节点的数据
+    return lastData;
+}

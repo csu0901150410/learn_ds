@@ -1,7 +1,8 @@
-﻿#include "ls_shapes.h"
+﻿#include "ls_draw_shapes.h"
 
 #include <assert.h> // for assert
 #include <stdlib.h> // for malloc free
+#include <math.h>
 
 // 绘制点
 void draw_point(HDC hdc, lsPoint point, COLORREF color)
@@ -48,23 +49,36 @@ void draw_ellipss(HDC hdc, lsPoint LT_point, lsPoint RB_point, COLORREF color)
     SelectObject(hdc, oldBrush);
     DeleteObject(hBrush);
 }
-// 绘制多边形
-void draw_polygon(HDC hdc, lsPoint *points, int numPionts, COLORREF color)
+
+// 绘制圆弧
+void draw_arc(HDC hdc, lsArc arc, COLORREF color) {
+    int radius = (int)sqrt(pow(arc.c.x - arc.s.x, 2) + pow(arc.c.y - arc.s.y, 2));
+    HBRUSH hBrush = CreateSolidBrush(color);
+    HGDIOBJ oldBrush = SelectObject(hdc, hBrush);
+    // 绘制圆弧
+    Arc(hdc, (int)arc.c.x - radius, (int)arc.c.y - radius, (int)arc.c.x + radius, (int)arc.c.y + radius, (int)arc.s.x, (int)arc.s.y, (int)arc.e.x, (int)arc.e.y);
+
+    SelectObject(hdc, oldBrush);
+    DeleteObject(hBrush);
+}
+
+// 绘制闭合多边形
+void draw_polygon(HDC hdc, lsPolygon polygon, COLORREF color)
 {
+    if (polygon.pointCount < 2)
+        return;
+
     HBRUSH hBrush = CreateSolidBrush(color);
     HGDIOBJ oldBrush = SelectObject(hdc, hBrush);
 
-    POINT *_points = (POINT *)malloc(sizeof(POINT) * numPionts);
-    assert(_points);
-    for (int i = 0; i < numPionts; i++)
+    MoveToEx(hdc, (int)polygon.points[0].x, (int)polygon.points[0].y, NULL);//起点
+    for (int i = 1; i < polygon.pointCount - 1; i++)
     {
-        _points[i].x = (LONG)points[i].x;
-        _points[i].y = (LONG)points[i].y;
+        LineTo(hdc, (int)polygon.points[i + 1].x, (int)polygon.points[i + 1].y);//连到下一个点
     }
+    LineTo(hdc, (int)polygon.points[0].x, (int)polygon.points[0].y);//连到起点
 
-    Polygon(hdc, _points, numPionts);
     SelectObject(hdc, oldBrush);
     DeleteObject(hBrush);
 
-    free(_points);
 }

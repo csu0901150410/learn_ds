@@ -100,3 +100,15 @@ void ls_list_iterator_step(lsListIterator *it);
  * @return void* 返回节点数据指针
  */
 void *ls_list_iterator_get_data(lsListIterator *it);
+
+
+/**
+ * @brief.通过迭代器获取当前链表的最后一个节点（除头节点外）
+ * @param list 链表
+ * @return void* 返回节点数据指针
+ */
+void* ls_list_last(const lsList* list);
+
+
+
+

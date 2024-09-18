@@ -123,4 +123,22 @@ bool ls_dxf_process_entity(lsDxf *dxf);
  */
 bool ls_dxf_process_line(lsDxf *dxf);
 
+/**
+ * @brief dxf解析处理arc
+ *
+ * @param dxf lsDxf结构体指针
+ * @return true 处理成功
+ * @return false处理失败
+ */
+bool ls_dxf_process_arc(lsDxf* dxf);
+
+/**
+ * @brief dxf解析处理polygon
+ *
+ * @param dxf lsDxf结构体指针
+ * @return true 处理成功
+ * @return false处理失败
+ */
+bool ls_dxf_process_polygon(lsDxf* dxf);
 #endif// __LS_DXF_H__
+

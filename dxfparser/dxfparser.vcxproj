@@ -30,7 +30,8 @@
     <ClCompile Include="src\ls_list.c" />
     <ClCompile Include="src\ls_log.c" />
     <ClCompile Include="src\ls_pen.c" />
-    <ClCompile Include="src\ls_shapes.c" />
+    <ClCompile Include="src\ls_polygon.c" />
+    <ClCompile Include="src\ls_draw_shapes.c" />
     <ClCompile Include="src\ls_utils.c" />
     <ClCompile Include="src\ls_vector.c" />
     <ClCompile Include="src\ls_window.c" />
@@ -50,7 +51,8 @@
     <ClInclude Include="src\ls_list.h" />
     <ClInclude Include="src\ls_log.h" />
     <ClInclude Include="src\ls_pen.h" />
-    <ClInclude Include="src\ls_shapes.h" />
+    <ClInclude Include="src\ls_polygon.h" />
+    <ClInclude Include="src\ls_draw_shapes.h" />
     <ClInclude Include="src\ls_utils.h" />
     <ClInclude Include="src\ls_vector.h" />
     <ClInclude Include="src\ls_window.h" />

@@ -1,7 +1,7 @@
 ﻿#include <math.h>
 
 #include "ls_window.h"
-#include "ls_shapes.h"
+#include "ls_draw_shapes.h"
 #include "dxf_io.h"
 #include "ls_list.h"
 
@@ -11,6 +11,7 @@
 #include "ls_dxf.h"
 #include "ls_list.h"
 #include "ls_entity.h"
+#include "ls_polygon.h"
 
 #define M_PI 3.14159265358979323846
 
@@ -123,7 +124,7 @@ void ls_window_read_dxf(HWND hwnd)
 {
     lsDxf *dxfReader = ls_dxf_create();
 
-    ls_dxf_init(dxfReader, "dxf/bridge.dxf");
+    ls_dxf_init(dxfReader, "dxf/polygon.dxf");
 
     ls_dxf_parse(dxfReader);
 
@@ -149,7 +150,7 @@ void ls_window_draw_shapes(HDC hdc, const lsDxf *dxf)
         {
             case enum_geo_segment:
             {
-                lsLineSegment *line = (lsLineSegment*)entity->entity;
+                lsLineSegment* line = (lsLineSegment*)entity->entity;
                 if (NULL != line)
                 {
                     //ls_log_info("draw line : s(%f, %f), e(%f, %f)\n", line->s.x, line->s.y, line->e.x, line->e.y);
@@ -160,14 +161,56 @@ void ls_window_draw_shapes(HDC hdc, const lsDxf *dxf)
                     seg.s.y *= 1000;
                     seg.e.x *= 1000;
                     seg.e.y *= 1000;
-					seg.s.x += 400;
-					seg.s.y += 400;
-					seg.e.x += 400;
-					seg.e.y += 400;
+                    seg.s.x += 400;
+                    seg.s.y += 400;
+                    seg.e.x += 400;
+                    seg.e.y += 400;
                     ls_log_info("draw line : s(%f, %f), e(%f, %f)\n", seg.s.x, seg.s.y, seg.e.x, seg.e.y);
                     draw_line(hdc, seg, RGB(255, 0, 0));
                 }
             }
+            break;
+
+            case enum_geo_arc:
+            {
+                lsArc* arc = (lsArc*)entity->entity;
+                if (NULL != arc)
+                {
+                    lsArc scaledArc = *arc;
+                    scaledArc.s.x *= 1000;
+                    scaledArc.s.y *= 1000;
+                    scaledArc.e.x *= 1000;
+                    scaledArc.e.y *= 1000;
+                    scaledArc.c.x *= 1000;
+                    scaledArc.c.y *= 1000;
+                    scaledArc.s.x += 400;
+                    scaledArc.s.y += 400;
+                    scaledArc.e.x += 400;
+                    scaledArc.e.y += 400;
+                    scaledArc.c.x += 400;
+                    scaledArc.c.y += 400;
+                    draw_arc(hdc, scaledArc, RGB(0, 255, 0));
+                }
+            }
+            break;
+
+            case enum_geo_polygon:
+            {
+                lsPolygon* polygon = (lsPolygon*)entity->entity;
+                if (NULL != polygon)
+                {
+                    lsPolygon scaledPolygon = *polygon;
+                    for (int i = 0; i < polygon->pointCount; i++)
+                    {
+                        scaledPolygon.points[i].x *= 1000;
+                        scaledPolygon.points[i].y *= 1000;
+                        scaledPolygon.points[i].x += 400;
+                        scaledPolygon.points[i].y += 400;
+                    }
+                    draw_polygon(hdc, scaledPolygon, RGB(0, 0, 255));
+                }
+            }
+            break;
         }
     }
 }

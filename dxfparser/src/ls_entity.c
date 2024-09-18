@@ -27,6 +27,20 @@ lsEntity *ls_entity_create_arc(lsVector start, lsVector end, lsVector center, bo
     return entity;
 }
 
+lsEntity* ls_entity_create_polygon(lsList* points)
+{
+    if (points == NULL || points->head == NULL)
+        return NULL;
+
+    lsEntity* entity = (lsEntity*)malloc(sizeof(lsEntity));
+    assert(entity);
+
+    entity->type = enum_geo_polygon;  // 定义的多边形类型
+    entity->entity = points;  // 将顶点链表存入实体
+    return entity;
+}
+
+
 void ls_entity_destroy(lsEntity **root)
 {
     if (NULL == root || NULL == *root)

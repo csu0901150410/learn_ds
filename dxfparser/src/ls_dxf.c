@@ -8,6 +8,7 @@
 
 #include "ls_line_segment.h"
 #include "ls_entity.h"
+#include "ls_list.h"
 
 lsDxf *ls_dxf_create()
 {
@@ -168,7 +169,13 @@ bool ls_dxf_process_entity(lsDxf *dxf)
         else if (ls_utils_is_string_equal_n(rowString, "LINE", 4))
             ls_dxf_process_line(dxf);
 
-        // 其他的数据，不关心，再读一行
+        else if (ls_utils_is_string_equal_n(rowString, "ARC", 3))
+            ls_dxf_process_arc(dxf);
+
+        else if (ls_utils_is_string_equal_n(rowString, "LWPOLYLINE", 10))
+            ls_dxf_process_polygon(dxf);
+            
+            // 其他的数据，不关心，再读一行
         else
         {
             if (!ls_dxf_read_record(dxf, &code))
@@ -229,6 +236,112 @@ bool ls_dxf_process_line(lsDxf *dxf)
         case 21:
         {
             end.y = (lsReal)atof(ls_dxf_get_row_string(dxf));
+        }
+        break;
+        }
+    }
+
+    return true;
+}
+
+
+bool ls_dxf_process_arc(lsDxf* dxf) {
+    int code;
+    lsVector start = { 0, 0 }, end = { 0, 0 }, center = { 0, 0 };
+    bool bccw = true; // 默认设置为逆时针
+
+    while (1)
+    {
+        if (!ls_dxf_read_record(dxf, &code))
+            return false;
+
+        switch (code)
+        {
+        case 0:
+        {
+            lsEntity* pEnt = ls_entity_create_arc(start, end, center, bccw);
+            assert(pEnt);
+            ls_list_append(dxf->list, pEnt);
+
+            // 遇到组码0，表示当前圆弧数据段结束，圆弧解析完毕
+            return true;
+        }
+        break;
+
+        // 10 组码对应圆弧起点的 X 坐标
+        case 10:
+            start.x = (lsReal)atof(ls_dxf_get_row_string(dxf));
+            break;
+
+            // 20 组码对应圆弧起点的 Y 坐标
+        case 20:
+            start.y = (lsReal)atof(ls_dxf_get_row_string(dxf));
+            break;
+
+            // 11 组码对应圆弧终点的 X 坐标
+        case 11:
+            end.x = (lsReal)atof(ls_dxf_get_row_string(dxf));
+            break;
+
+            // 21 组码对应圆弧终点的 Y 坐标
+        case 21:
+            end.y = (lsReal)atof(ls_dxf_get_row_string(dxf));
+            break;
+
+            // 30 组码对应圆心的 X 坐标
+        case 30:
+            center.x = (lsReal)atof(ls_dxf_get_row_string(dxf));
+            break;
+
+            // 31 组码对应圆心的 Y 坐标
+        case 31:
+            center.y = (lsReal)atof(ls_dxf_get_row_string(dxf));
+            break;
+
+            // 51 组码表示圆弧的旋转方向，0 表示顺时针，1 表示逆时针
+        case 51:
+            bccw = atoi(ls_dxf_get_row_string(dxf)) != 0;
+            break;
+        }
+    }
+
+    return true;
+}
+
+
+bool ls_dxf_process_polygon(lsDxf* dxf) {
+    int code;
+    lsList *points = ls_list_create();
+
+    while (1)
+    {
+        if (!ls_dxf_read_record(dxf, &code))
+            return false;
+
+        switch (code)
+        {
+        case 0:
+        {
+            lsEntity * polygon = ls_entity_create_polygon(points);//将点的链表封装成实体
+            assert(polygon);
+            ls_list_append(dxf->list, polygon);
+            return true;
+        }
+        case 10:
+        {
+            // lsVector point = {0, 0};//一个新点
+            // 新分配一个点,因为这个点没有直接放入dxf, point = {0, 0}是栈内存会被清除，得换成堆内存。
+            lsVector* point = (lsVector*)malloc(sizeof(lsVector));
+            assert(point);
+            point->x = (lsReal)atof(ls_dxf_get_row_string(dxf));
+            ls_list_append(points, point);
+        }
+        break;
+        case 20:
+        {
+            lsVector *point = (lsVector*)ls_list_last(points);
+            assert(point);
+            point->y = (lsReal)atof(ls_dxf_get_row_string(dxf));
         }
         break;
         }
