@@ -14,7 +14,6 @@
 
 #include "ls_window.h"
 #include "ls_log.h"
-#include "dxf_parser.h"
 #include "ls_dxf.h"
 
 const TCHAR APP_WND_CLASS[] = _T("dxfparser.app.class");

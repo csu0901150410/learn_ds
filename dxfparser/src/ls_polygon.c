@@ -40,3 +40,25 @@ void ls_polygon_append_seg(lsPolygon *polygon, lsLineSegment seg)
     lsLineSegment *pSeg = ls_line_segment_create(seg.s, seg.e);
     ls_list_append(polygon->edges, pSeg);
 }
+
+lsBox ls_polygon_get_box(const lsPolygon *polygon)
+{
+    lsBox box;
+    ls_box_init(&box);
+    
+    if (NULL == polygon || NULL == polygon->edges)
+        return box;
+
+    for (lsListIterator it = ls_list_iterator_start(polygon->edges); !ls_list_iterator_done(&it); ls_list_iterator_step(&it))
+    {
+        // 注意，后续polygon会存入圆弧，这些取polygon数据的逻辑肯定得改的
+        const lsLineSegment *pSeg = (lsLineSegment*)ls_list_iterator_get_data(&it);
+        if (NULL == pSeg)
+            continue;
+            
+        lsBox segbox = ls_line_segment_get_box(pSeg);
+        ls_box_combine(&box, &segbox);
+    }
+
+    return box;
+}

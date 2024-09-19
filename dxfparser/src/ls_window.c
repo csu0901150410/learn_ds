@@ -2,17 +2,13 @@
 
 #include "ls_window.h"
 #include "ls_draw_shapes.h"
-#include "dxf_io.h"
 #include "ls_list.h"
-
-#include "dxf_parser.h"
 
 #include "ls_log.h"
 #include "ls_dxf.h"
 #include "ls_list.h"
 #include "ls_entity.h"
 #include "ls_polygon.h"
-#include "ls_trans_scale.h"
 
 
 #define M_PI 3.14159265358979323846
@@ -63,7 +59,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hwnd, &ps);
 
-        ls_window_draw_shapes(hdc, dxfReader);
+        ls_window_draw_shapes(hwnd, hdc, dxfReader);
 
         EndPaint(hwnd, &ps);
         return 0;
@@ -126,12 +122,9 @@ void ls_window_read_dxf(HWND hwnd)
 {
     lsDxf *dxfReader = ls_dxf_create();
 
-   // ls_dxf_init(dxfReader, "dxf/polygon.dxf");
-
-    ls_dxf_init(dxfReader, "dxf/arc.dxf");
-    lsBox box;
-    init_box(&box);
-    ls_dxf_parse(dxfReader,box);
+    // ls_dxf_init(dxfReader, "dxf/arc.dxf");
+    ls_dxf_init(dxfReader, "dxf/polygon.dxf");
+    ls_dxf_parse(dxfReader);
     
 
     // ls_dxf_destroy(&dxfReader);
@@ -140,21 +133,62 @@ void ls_window_read_dxf(HWND hwnd)
     SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)dxfReader);
 }
 
-// 获取窗口的客户区矩形
-RECT clientRect;
-GetClientRect(GetParent(hdc), &clientRect); // 获取客户区矩形
+lsBox ls_window_get_window_box(HWND hwnd)
+{
+    // 窗口尺寸
+    RECT rect;
+    // GetWindowRect(hwnd, &rect);
+    GetClientRect(hwnd, &rect);// 应该是获取绘图区域的矩形
+    
+    lsBox box;
+    box.left = (lsReal)rect.left;
+    box.right = (lsReal)rect.right;
+    box.bottom = (lsReal)rect.top;
+    box.top = (lsReal)rect.bottom;// 注意RECT的坐标系和lsBox中的坐标系是不同的
+    
+    return box;
+}
 
-// 计算窗口的宽度和高度
-lsReal screenWidth = (lsReal)(clientRect.right - clientRect.left);
-lsReal screenHeight = (lsReal)(clientRect.bottom - clientRect.top);
+// 尽量不要定义全局变量
 
-// 计算转换参数
-lsTransScale params = TransformParams(&box, screenWidth, screenHeight);
-
-void ls_window_draw_shapes(HDC hdc, const lsDxf *dxf)
+void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
 {
     if (NULL == dxf || NULL == dxf->list)
         return;
+
+    // 取图元边界矩形，计算缩放倍数和偏移向量
+    lsBox box;
+    ls_box_init(&box);
+    for (lsListIterator it = ls_list_iterator_start(dxf->list); !ls_list_iterator_done(&it); ls_list_iterator_step(&it))
+    {
+        const lsEntity *entity = (lsEntity*)ls_list_iterator_get_data(&it);
+        if (NULL == entity)
+            continue;
+            
+        lsBox entbox = ls_entity_get_box(entity);
+        ls_box_combine(&box, &entbox);
+    }
+
+    if (!ls_box_valid(&box))
+        return;
+        
+    lsBox windowbox = ls_window_get_window_box(hwnd);
+    if (!ls_box_valid(&windowbox))
+        return;
+
+    // 计算图元坐标变换到屏幕坐标的缩放系数，该系数由屏幕坐标/图元坐标得到
+    lsReal entw = ls_box_width(&box), enth = ls_box_height(&box);
+    if (0 == entw || 0 == enth)
+        return;
+    lsReal scalex = ls_box_width(&windowbox) / entw;
+    lsReal scaley = ls_box_height(&windowbox) / enth;
+    // 取较小者进行放大，如果取较大者进行放大，有一边会超出
+    lsReal scale = MIN(scalex, scaley) * 0.9;// 乘一个系数，不然边缘看不到
+
+    // 看来还要定义一些向量运算和矩阵运算的函数
+    lsPoint entityCenter = ls_box_center(&box);
+    lsPoint windowCenter = ls_box_center(&windowbox);
+    lsPoint windowOrigin = {windowbox.left, windowbox.bottom};
 
     // 遍历链表，取出图元，进行绘制
     for (lsListIterator it = ls_list_iterator_start(dxf->list); !ls_list_iterator_done(&it); ls_list_iterator_step(&it))
@@ -174,14 +208,37 @@ void ls_window_draw_shapes(HDC hdc, const lsDxf *dxf)
                     // 临时版本，随便找个放大倍数和偏移坐标，只是为了看到图形，后续应该根据边界矩形来确定放大倍数和偏移坐标
                     // 后续图元解析、显示可以参考线段这个框架来做
                     lsLineSegment seg = *line;
-                    seg.s.x *= 1000;
-                    seg.s.y *= 1000;
-                    seg.e.x *= 1000;
-                    seg.e.y *= 1000;
-                    seg.s.x += 400;
-                    seg.s.y += 400;
-                    seg.e.x += 400;
-                    seg.e.y += 400;
+                    // seg.s.x *= 1000;
+                    // seg.s.y *= 1000;
+                    // seg.e.x *= 1000;
+                    // seg.e.y *= 1000;
+                    // seg.s.x += 400;
+                    // seg.s.y += 400;
+                    // seg.e.x += 400;
+                    // seg.e.y += 400;
+
+                    // 1.全部图元中心移动到原点
+                    // 2.图元缩放
+                    // 3.图元移动到屏幕中心
+                    // 4.屏幕坐标转窗口坐标
+
+                    seg.s.x -= entityCenter.x;
+                    seg.s.y -= entityCenter.y;
+                    seg.e.x -= entityCenter.x;
+                    seg.e.y -= entityCenter.y;
+                    seg.s.x *= scale;
+                    seg.s.y *= scale;
+                    seg.e.x *= scale;
+                    seg.e.y *= scale;
+                    seg.s.x += windowCenter.x;
+                    seg.s.y += windowCenter.y;
+                    seg.e.x += windowCenter.x;
+                    seg.e.y += windowCenter.y;
+                    seg.s.x -= windowOrigin.x;
+                    seg.s.y -= windowOrigin.y;
+                    seg.e.x -= windowOrigin.x;
+                    seg.e.y -= windowOrigin.y;
+                    
                     ls_log_info("draw line : s(%f, %f), e(%f, %f)\n", seg.s.x, seg.s.y, seg.e.x, seg.e.y);
                     draw_line(hdc, seg, RGB(255, 0, 0));
                 }
@@ -194,12 +251,12 @@ void ls_window_draw_shapes(HDC hdc, const lsDxf *dxf)
                 if (NULL != arc)
                 {
                     lsArc scaledArc = *arc;
-                    scaledArc.s.x *= 0.1;
-                    scaledArc.s.y *= 0.1;
-                    scaledArc.e.x *= 0.1;
-                    scaledArc.e.y *= 0.1;
-                    scaledArc.c.x *= 0.1;
-                    scaledArc.c.y *= 0.1;
+                    scaledArc.s.x *= 0.1f;
+                    scaledArc.s.y *= 0.1f;
+                    scaledArc.e.x *= 0.1f;
+                    scaledArc.e.y *= 0.1f;
+                    scaledArc.c.x *= 0.1f;
+                    scaledArc.c.y *= 0.1f;
                     scaledArc.s.x += 0;
                     scaledArc.s.y += 0;
                     scaledArc.e.x += 0;
@@ -222,14 +279,38 @@ void ls_window_draw_shapes(HDC hdc, const lsDxf *dxf)
                         lsLineSegment* pSeg = (lsLineSegment*)ls_list_iterator_get_data(&it);
 
                         lsLineSegment seg = *pSeg;
-                        seg.s.x *= 0.1;
-                        seg.s.y *= 0.1;
-                        seg.e.x *= 0.1;
-                        seg.e.y *= 0.1;
-                        seg.s.x += 0;
-                        seg.s.y += 0;
-                        seg.e.x += 0;
-                        seg.e.y += 0;
+                        
+                        // seg.s.x *= 0.1f;
+                        // seg.s.y *= 0.1f;
+                        // seg.e.x *= 0.1f;
+                        // seg.e.y *= 0.1f;
+                        // seg.s.x += 0;
+                        // seg.s.y += 0;
+                        // seg.e.x += 0;
+                        // seg.e.y += 0;
+                        
+                        // 1.全部图元中心移动到原点
+                        // 2.图元缩放
+                        // 3.图元移动到屏幕中心
+                        // 4.屏幕坐标转窗口坐标
+
+                        seg.s.x -= entityCenter.x;
+                        seg.s.y -= entityCenter.y;
+                        seg.e.x -= entityCenter.x;
+                        seg.e.y -= entityCenter.y;
+                        seg.s.x *= scale;
+                        seg.s.y *= scale;
+                        seg.e.x *= scale;
+                        seg.e.y *= scale;
+                        seg.s.x += windowCenter.x;
+                        seg.s.y += windowCenter.y;
+                        seg.e.x += windowCenter.x;
+                        seg.e.y += windowCenter.y;
+                        seg.s.x -= windowOrigin.x;
+                        seg.s.y -= windowOrigin.y;
+                        seg.e.x -= windowOrigin.x;
+                        seg.e.y -= windowOrigin.y;
+                        
                         ls_log_info("draw line : s(%f, %f), e(%f, %f)\n", seg.s.x, seg.s.y, seg.e.x, seg.e.y);
                         draw_line(hdc, seg, RGB(255, 0, 0));
                     }

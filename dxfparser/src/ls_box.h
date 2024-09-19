@@ -1,17 +1,30 @@
-#pragma once
+﻿#pragma once
+
+#include <stdbool.h> // for bool
 
 #include "ls_vector.h"
-#include "ls_entity.h"
 
 typedef struct {
-	//lsVector bottom_left;
-	//lsVector top_right;
-	lsReal minX;
-	lsReal maxX;
-	lsReal minY;
-	lsReal maxY;
-}lsBox;
+	lsReal left;
+	lsReal right;
+	lsReal bottom;
+	lsReal top;
+} lsBox;
 
-void init_box(lsBox* box);
+void ls_box_init(lsBox *box);
 
-void update_box(lsBox* box, lsPoint point);
+bool ls_box_valid(const lsBox *box);
+
+/**
+ * @brief lsBox合并
+ * 
+ * @param srcbox \p srcbox 和 \p dstbox 合并后，更新 \p srcbox
+ * @param dstbox 被合并的box
+ */
+void ls_box_combine(lsBox *srcbox, const lsBox *dstbox);
+
+lsReal ls_box_width(const lsBox *box);
+
+lsReal ls_box_height(const lsBox *box);
+
+lsPoint ls_box_center(const lsBox *box);

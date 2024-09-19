@@ -1,6 +1,6 @@
 ﻿#include "ls_line_segment.h"
 
-#include <stdlib.h> // for malloc
+#include <stdlib.h> // for malloc/min/max
 #include <assert.h> // for assert
 
 lsLineSegment *ls_line_segment_create(lsVector start, lsVector end)
@@ -19,4 +19,20 @@ void ls_line_segment_destroy(lsLineSegment **root)
         return;
     free(*root);
     *root = NULL;
+}
+
+lsBox ls_line_segment_get_box(const lsLineSegment *line)
+{
+    lsBox box;
+    ls_box_init(&box);
+    
+    if (NULL != line)
+    {
+        box.left = min(line->s.x, line->e.x);
+        box.right = max(line->s.x, line->e.x);
+        box.bottom = min(line->s.y, line->e.y);
+        box.top = max(line->s.y, line->e.y);
+    }
+    
+    return box;
 }

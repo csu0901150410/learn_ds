@@ -4,9 +4,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "ls_common.h"
+#include "ls_defs.h"
 #include "ls_list.h"
-#include "ls_box.h"
 
 /**
  * @brief dxf文件读取结构体及相关函数设计
@@ -122,7 +121,7 @@ bool ls_dxf_process_entity(lsDxf *dxf);
  * @return true 处理成功
  * @return false处理失败
  */
-bool ls_dxf_process_line(lsDxf *dxf,lsBox* box);
+bool ls_dxf_process_line(lsDxf *dxf);
 
 /**
  * @brief dxf解析处理arc
@@ -131,7 +130,7 @@ bool ls_dxf_process_line(lsDxf *dxf,lsBox* box);
  * @return true 处理成功
  * @return false处理失败
  */
-bool ls_dxf_process_arc(lsDxf* dxf, lsBox* box);
+bool ls_dxf_process_arc(lsDxf* dxf);
 
 /**
  * @brief dxf解析处理polygon
@@ -140,6 +139,7 @@ bool ls_dxf_process_arc(lsDxf* dxf, lsBox* box);
  * @return true 处理成功
  * @return false处理失败
  */
-bool ls_dxf_process_polygon(lsDxf* dxf, lsBox* box);
+bool ls_dxf_process_polygon(lsDxf* dxf);
+
 #endif// __LS_DXF_H__
 
