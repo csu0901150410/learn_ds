@@ -12,6 +12,8 @@
 #include "ls_list.h"
 #include "ls_entity.h"
 #include "ls_polygon.h"
+#include "ls_trans_scale.h"
+
 
 #define M_PI 3.14159265358979323846
 
@@ -127,14 +129,27 @@ void ls_window_read_dxf(HWND hwnd)
    // ls_dxf_init(dxfReader, "dxf/polygon.dxf");
 
     ls_dxf_init(dxfReader, "dxf/arc.dxf");
-
-    ls_dxf_parse(dxfReader);
+    lsBox box;
+    init_box(&box);
+    ls_dxf_parse(dxfReader,box);
+    
 
     // ls_dxf_destroy(&dxfReader);
 
     // 将dxf指针保存到窗口
     SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)dxfReader);
 }
+
+// 获取窗口的客户区矩形
+RECT clientRect;
+GetClientRect(GetParent(hdc), &clientRect); // 获取客户区矩形
+
+// 计算窗口的宽度和高度
+lsReal screenWidth = (lsReal)(clientRect.right - clientRect.left);
+lsReal screenHeight = (lsReal)(clientRect.bottom - clientRect.top);
+
+// 计算转换参数
+lsTransScale params = TransformParams(&box, screenWidth, screenHeight);
 
 void ls_window_draw_shapes(HDC hdc, const lsDxf *dxf)
 {

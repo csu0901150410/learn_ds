@@ -57,6 +57,12 @@
     <ClCompile Include="src\ls_polygon.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ls_box.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ls_trans_scale.c">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ls_list.h">
@@ -111,6 +117,12 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\ls_polygon.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ls_box.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ls_trans_scale.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

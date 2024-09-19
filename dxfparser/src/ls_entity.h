@@ -26,4 +26,6 @@ lsEntity *ls_entity_create_arc(lsVector start, lsVector end, lsVector center, bo
 // 这些create函数，遵循一个规则，比方说这里是 polygon to entity，那么形参一定是polygon
 lsEntity *ls_entity_create_polygon(lsPolygon *polygon);
 
+void ls_entity_get_Points(const lsEntity* entity, lsVector** points, size_t* pointCount);
+
 void ls_entity_destroy(lsEntity **root);

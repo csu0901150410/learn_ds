@@ -108,7 +108,7 @@ const char *ls_dxf_get_row_string(lsDxf *dxf)
     return dxf->str;
 }
 
-bool ls_dxf_parse(lsDxf *dxf)
+bool ls_dxf_parse(lsDxf *dxf, lsBox* box)
 {
     int code;
     const char *rowString = NULL;
@@ -136,7 +136,7 @@ bool ls_dxf_parse(lsDxf *dxf)
                 {
                     rowString = ls_dxf_get_row_string(dxf);
                     if (ls_utils_is_string_equal_n(rowString, "ENTITIES", 8))
-                        ls_dxf_process_entity(dxf);
+                        ls_dxf_process_entity(dxf, box);
                 }
             }
         }
@@ -145,7 +145,7 @@ bool ls_dxf_parse(lsDxf *dxf)
     return true;
 }
 
-bool ls_dxf_process_entity(lsDxf *dxf)
+bool ls_dxf_process_entity(lsDxf *dxf, lsBox* box)
 {
     // 改造思路：实际上线段处理函数中已经读到下一个图元了，所以entity解析这里无需再在循环中读取一个Record，
     // 而是等待线段处理函数返回的时候，开启下一轮循环，直到读取到0组码
@@ -168,13 +168,13 @@ bool ls_dxf_process_entity(lsDxf *dxf)
 
         // 处理线段
         else if (ls_utils_is_string_equal_n(rowString, "LINE", 4))
-            ls_dxf_process_line(dxf);
+            ls_dxf_process_line(dxf, box);
 
         else if (ls_utils_is_string_equal_n(rowString, "ARC", 3))
-            ls_dxf_process_arc(dxf);
+            ls_dxf_process_arc(dxf, box);
 
         else if (ls_utils_is_string_equal_n(rowString, "LWPOLYLINE", 10))
-            ls_dxf_process_polygon(dxf);
+            ls_dxf_process_polygon(dxf, box);
             
         // 其他的数据，不关心，再读一行
         else
@@ -189,8 +189,7 @@ bool ls_dxf_process_entity(lsDxf *dxf)
     return true;
 }
 
-// bool ls_dxf_process_line(lsDxf* dxf, lsShapes* shapes)
-bool ls_dxf_process_line(lsDxf *dxf)
+bool ls_dxf_process_line(lsDxf *dxf, lsBox *box)
 {
     int code;
     lsPoint start = {0, 0}, end = {0, 0};
@@ -208,6 +207,9 @@ bool ls_dxf_process_line(lsDxf *dxf)
             assert(pEnt);
             ls_list_append(dxf->list, pEnt);
 
+            // 更新边界矩形
+            update_box(box, start);
+            update_box(box, end);
             // 遇到组码0，表示当前线段数据段结束，线段解析完毕
 			// ls_log_info("Segment start, x : %f, y : %f\n", start.x, start.y);
 			// ls_log_info("Segment end, x : %f, y : %f\n", end.x, end.y);
@@ -246,7 +248,7 @@ bool ls_dxf_process_line(lsDxf *dxf)
 }
 
 
-bool ls_dxf_process_arc(lsDxf* dxf) {
+bool ls_dxf_process_arc(lsDxf* dxf, lsBox* box) {
     int code;
     lsVector start = { 0, 0 }, end = { 0, 0 }, center = { 0, 0 };
     bool bccw = true; // 默认设置为逆时针
@@ -264,6 +266,10 @@ bool ls_dxf_process_arc(lsDxf* dxf) {
             assert(pEnt);
             ls_list_append(dxf->list, pEnt);
 
+
+            update_box(box, start);
+            update_box(box, end);
+            update_box(box, center);
             // 遇到组码0，表示当前圆弧数据段结束，圆弧解析完毕
             return true;
         }
@@ -310,7 +316,7 @@ bool ls_dxf_process_arc(lsDxf* dxf) {
 }
 
 // Ref : [https://help.autodesk.com/view/ACD/2023/CHS/?guid=GUID-748FC305-F3F2-4F74-825A-61F04D757A50]
-bool ls_dxf_process_polygon(lsDxf* dxf)
+bool ls_dxf_process_polygon(lsDxf* dxf, lsBox* box)
 {
     int code;
     const char *rowString = NULL;
@@ -347,6 +353,13 @@ bool ls_dxf_process_polygon(lsDxf* dxf)
             
             lsEntity *pEnt = ls_entity_create_polygon(polygon);
             ls_list_append(dxf->list, pEnt);
+
+            // 遍历多边形的边，更新边界矩形
+            for (lsListIterator it = ls_list_iterator_start(polygon->edges); !ls_list_iterator_done(&it); ls_list_iterator_step(&it)) {
+                lsLineSegment* seg = (lsLineSegment*)ls_list_iterator_get_data(&it);
+                update_box(box, seg->s);
+                update_box(box, seg->e);
+            }
             return true;
         }
         

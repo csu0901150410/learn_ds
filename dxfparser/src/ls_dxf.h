@@ -6,6 +6,7 @@
 
 #include "ls_common.h"
 #include "ls_list.h"
+#include "ls_box.h"
 
 /**
  * @brief dxf文件读取结构体及相关函数设计
@@ -121,7 +122,7 @@ bool ls_dxf_process_entity(lsDxf *dxf);
  * @return true 处理成功
  * @return false处理失败
  */
-bool ls_dxf_process_line(lsDxf *dxf);
+bool ls_dxf_process_line(lsDxf *dxf,lsBox* box);
 
 /**
  * @brief dxf解析处理arc
@@ -130,7 +131,7 @@ bool ls_dxf_process_line(lsDxf *dxf);
  * @return true 处理成功
  * @return false处理失败
  */
-bool ls_dxf_process_arc(lsDxf* dxf);
+bool ls_dxf_process_arc(lsDxf* dxf, lsBox* box);
 
 /**
  * @brief dxf解析处理polygon
@@ -139,6 +140,6 @@ bool ls_dxf_process_arc(lsDxf* dxf);
  * @return true 处理成功
  * @return false处理失败
  */
-bool ls_dxf_process_polygon(lsDxf* dxf);
+bool ls_dxf_process_polygon(lsDxf* dxf, lsBox* box);
 #endif// __LS_DXF_H__
 

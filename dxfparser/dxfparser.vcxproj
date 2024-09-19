@@ -22,6 +22,7 @@
     <ClCompile Include="src\dxf_io.c" />
     <ClCompile Include="src\dxf_parser.c" />
     <ClCompile Include="src\ls_arc.c" />
+    <ClCompile Include="src\ls_box.c" />
     <ClCompile Include="src\ls_brush.c" />
     <ClCompile Include="src\ls_condition.c" />
     <ClCompile Include="src\ls_dxf.c" />
@@ -32,6 +33,7 @@
     <ClCompile Include="src\ls_pen.c" />
     <ClCompile Include="src\ls_polygon.c" />
     <ClCompile Include="src\ls_draw_shapes.c" />
+    <ClCompile Include="src\ls_trans_scale.c" />
     <ClCompile Include="src\ls_utils.c" />
     <ClCompile Include="src\ls_vector.c" />
     <ClCompile Include="src\ls_window.c" />
@@ -41,6 +43,7 @@
     <ClInclude Include="src\dxf_io.h" />
     <ClInclude Include="src\dxf_parser.h" />
     <ClInclude Include="src\ls_arc.h" />
+    <ClInclude Include="src\ls_box.h" />
     <ClInclude Include="src\ls_brush.h" />
     <ClInclude Include="src\ls_common.h" />
     <ClInclude Include="src\ls_condition.h" />
@@ -53,6 +56,7 @@
     <ClInclude Include="src\ls_pen.h" />
     <ClInclude Include="src\ls_polygon.h" />
     <ClInclude Include="src\ls_draw_shapes.h" />
+    <ClInclude Include="src\ls_trans_scale.h" />
     <ClInclude Include="src\ls_utils.h" />
     <ClInclude Include="src\ls_vector.h" />
     <ClInclude Include="src\ls_window.h" />
