@@ -53,13 +53,14 @@ void draw_ellipss(HDC hdc, lsPoint LT_point, lsPoint RB_point, COLORREF color)
 // 绘制圆弧
 void draw_arc(HDC hdc, lsArc arc, COLORREF color) {
     int radius = (int)sqrt(pow(arc.c.x - arc.s.x, 2) + pow(arc.c.y - arc.s.y, 2));
-    HBRUSH hBrush = CreateSolidBrush(color);
-    HGDIOBJ oldBrush = SelectObject(hdc, hBrush);
+    
+    HPEN hpen = CreatePen(PS_SOLID, 2, color);         // 创建
+    HGDIOBJ oldPen = SelectObject(hdc, hpen);          // 选择
     // 绘制圆弧
     Arc(hdc, (int)arc.c.x - radius, (int)arc.c.y - radius, (int)arc.c.x + radius, (int)arc.c.y + radius, (int)arc.s.x, (int)arc.s.y, (int)arc.e.x, (int)arc.e.y);
 
-    SelectObject(hdc, oldBrush);
-    DeleteObject(hBrush);
+    SelectObject(hdc, oldPen); // 恢复
+    DeleteObject(hpen);
 }
 
 // 绘制闭合多边形

@@ -124,7 +124,9 @@ void ls_window_read_dxf(HWND hwnd)
 {
     lsDxf *dxfReader = ls_dxf_create();
 
-    ls_dxf_init(dxfReader, "dxf/polygon.dxf");
+   // ls_dxf_init(dxfReader, "dxf/polygon.dxf");
+
+    ls_dxf_init(dxfReader, "dxf/arc.dxf");
 
     ls_dxf_parse(dxfReader);
 
@@ -177,18 +179,18 @@ void ls_window_draw_shapes(HDC hdc, const lsDxf *dxf)
                 if (NULL != arc)
                 {
                     lsArc scaledArc = *arc;
-                    scaledArc.s.x *= 1000;
-                    scaledArc.s.y *= 1000;
-                    scaledArc.e.x *= 1000;
-                    scaledArc.e.y *= 1000;
-                    scaledArc.c.x *= 1000;
-                    scaledArc.c.y *= 1000;
-                    scaledArc.s.x += 400;
-                    scaledArc.s.y += 400;
-                    scaledArc.e.x += 400;
-                    scaledArc.e.y += 400;
-                    scaledArc.c.x += 400;
-                    scaledArc.c.y += 400;
+                    scaledArc.s.x *= 0.1;
+                    scaledArc.s.y *= 0.1;
+                    scaledArc.e.x *= 0.1;
+                    scaledArc.e.y *= 0.1;
+                    scaledArc.c.x *= 0.1;
+                    scaledArc.c.y *= 0.1;
+                    scaledArc.s.x += 0;
+                    scaledArc.s.y += 0;
+                    scaledArc.e.x += 0;
+                    scaledArc.e.y += 0;
+                    scaledArc.c.x += 300;
+                    scaledArc.c.y += 200;
                     draw_arc(hdc, scaledArc, RGB(0, 255, 0));
                 }
             }
