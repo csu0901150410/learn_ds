@@ -21,3 +21,5 @@
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+#define LS_PI 3.1415926535897932384626433832795

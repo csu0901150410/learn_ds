@@ -12,3 +12,5 @@ typedef struct
 typedef lsVector lsPoint;
 
 lsPoint ls_point_create(lsReal x, lsReal y);
+
+lsReal ls_vector_get_length(const lsVector *v);

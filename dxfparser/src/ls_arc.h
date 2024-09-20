@@ -31,3 +31,9 @@ bool arc_intersects_angle(double start_angle, double end_angle, double target_an
 
 // 获取圆弧的边界矩形
 lsBox ls_arc_geo_get_box(const lsArc* arc);
+
+lsReal ls_arc_get_start_angle(const lsArc *arc);
+
+lsReal ls_arc_get_end_angle(const lsArc *arc);
+
+lsReal ls_arc_get_radius(const lsArc *arc);

@@ -122,7 +122,7 @@ void ls_window_read_dxf(HWND hwnd)
 {
     lsDxf *dxfReader = ls_dxf_create();
 
-     ls_dxf_init(dxfReader, "dxf/arc.dxf");
+    ls_dxf_init(dxfReader, "dxf/arc.dxf");
     //ls_dxf_init(dxfReader, "dxf/polygon.dxf");
     ls_dxf_parse(dxfReader);
     
@@ -190,51 +190,14 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
     lsPoint windowCenter = ls_box_center(&windowbox);
     lsPoint windowOrigin = {windowbox.left, windowbox.bottom};
 
+    lsReal windowHeight = ls_box_height(&windowbox);
+
     // 遍历链表，取出图元，进行绘制
     for (lsListIterator it = ls_list_iterator_start(dxf->list); !ls_list_iterator_done(&it); ls_list_iterator_step(&it))
     {
         lsEntity *entity = ls_list_iterator_get_data(&it);
         if (NULL == entity)
             continue;
-
-        // 计算并绘制图元的 Box
-        lsBox entbox = ls_entity_get_box(entity);
-        lsPolygon* polygon = NULL;
-        ls_polygon_from_box(&entbox, &polygon);
-
-        if (polygon != NULL)
-        {
-            // 遍历 polygon，绘制每条边
-            for (lsListIterator polyIt = ls_list_iterator_start(polygon->edges); !ls_list_iterator_done(&polyIt); ls_list_iterator_step(&polyIt))
-            {
-                lsLineSegment* pSeg = (lsLineSegment*)ls_list_iterator_get_data(&polyIt);
-                lsLineSegment seg = *pSeg;
-
-                seg.s.x -= entityCenter.x;
-                seg.s.y -= entityCenter.y;
-                seg.e.x -= entityCenter.x;
-                seg.e.y -= entityCenter.y;
-                seg.s.x *= scale;
-                seg.s.y *= scale;
-                seg.e.x *= scale;
-                seg.e.y *= scale;
-                seg.s.x += windowCenter.x;
-                seg.s.y += windowCenter.y;
-                seg.e.x += windowCenter.x;
-                seg.e.y += windowCenter.y;
-                seg.s.x -= windowOrigin.x;
-                seg.s.y -= windowOrigin.y;
-                seg.e.x -= windowOrigin.x;
-                seg.e.y -= windowOrigin.y;
-
-                ls_log_info("draw box line : s(%f, %f), e(%f, %f)\n", seg.s.x, seg.s.y, seg.e.x, seg.e.y);
-                draw_line(hdc, seg, RGB(0, 255, 0)); // 绘制图元的 box 边界
-            }
-
-            // 销毁 polygon，释放内存
-            ls_polygon_destroy(&polygon);
-        }
-
 
         switch (entity->type)
         {
@@ -267,6 +230,10 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                     seg.s.y -= windowOrigin.y;
                     seg.e.x -= windowOrigin.x;
                     seg.e.y -= windowOrigin.y;
+
+                    // 因为窗口坐标系y轴是向下的，所以需要变换一下，先沿图元Y轴正向移动窗口高度到达窗口原点，再将Y轴反向
+                    seg.s.y = windowHeight - seg.s.y;
+                    seg.e.y = windowHeight - seg.e.y;
                     
                     ls_log_info("draw line : s(%f, %f), e(%f, %f)\n", seg.s.x, seg.s.y, seg.e.x, seg.e.y);
                     draw_line(hdc, seg, RGB(255, 0, 0));
@@ -280,39 +247,34 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                 if (NULL != arc)
                 {
                     lsArc seg = *arc;
-            
-                    seg.s.x -= entityCenter.x;
-                    seg.s.y -= entityCenter.y;
-                    seg.e.x -= entityCenter.x;
-                    seg.e.y -= entityCenter.y;
+
+                    // 计算出起点终点的弧度，以便平移圆心、放缩半径后重新计算开始点结束点
+                    lsReal sangle = ls_arc_get_start_angle(arc);
+                    lsReal eangle = ls_arc_get_end_angle(arc);
+                    lsReal radius = ls_arc_get_radius(arc);
+
                     seg.c.x -= entityCenter.x;
                     seg.c.y -= entityCenter.y;
-                    
-                    // 缩放，注意按圆心缩放
-                    seg.s.x *= scale;
-                    seg.s.y *= scale;
-                    seg.e.x *= scale;
-                    seg.e.y *= scale;
                     seg.c.x *= scale;
                     seg.c.y *= scale;
-
-                    // 平移回到窗口中心
-                    seg.s.x += windowCenter.x;
-                    seg.s.y += windowCenter.y;
-                    seg.e.x += windowCenter.x;
-                    seg.e.y += windowCenter.y;
                     seg.c.x += windowCenter.x;
                     seg.c.y += windowCenter.y;
-
-                    // 应用窗口偏移量
-                    seg.s.x -= windowOrigin.x;
-                    seg.s.y -= windowOrigin.y;
-                    seg.e.x -= windowOrigin.x;
-                    seg.e.y -= windowOrigin.y;
                     seg.c.x -= windowOrigin.x;
                     seg.c.y -= windowOrigin.y;
 
-                    draw_arc(hdc, seg, RGB(0, 255, 0));
+                    // 圆心偏移好之后，缩放半径，重新计算起点终点
+                    radius *= scale;
+                    seg.s.x = seg.c.x + radius * cos(sangle);
+                    seg.s.y = seg.c.y + radius * sin(sangle);
+                    seg.e.x = seg.c.x + radius * cos(eangle);
+                    seg.e.y = seg.c.y + radius * sin(eangle);
+
+                    // 因为窗口坐标系y轴是向下的，所以需要变换一下，先沿图元Y轴正向移动窗口高度到达窗口原点，再将Y轴反向
+                    seg.s.y = windowHeight - seg.s.y;
+                    seg.e.y = windowHeight - seg.e.y;
+                    seg.c.y = windowHeight - seg.c.y;
+
+                    draw_arc(hdc, seg, RGB(255, 255, 255));
 
 
 
@@ -356,6 +318,10 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                         seg.s.y -= windowOrigin.y;
                         seg.e.x -= windowOrigin.x;
                         seg.e.y -= windowOrigin.y;
+
+                        // 因为窗口坐标系y轴是向下的，所以需要变换一下，先沿图元Y轴正向移动窗口高度到达窗口原点，再将Y轴反向
+                        seg.s.y = windowHeight - seg.s.y;
+                        seg.e.y = windowHeight - seg.e.y;
                         
                         ls_log_info("draw line : s(%f, %f), e(%f, %f)\n", seg.s.x, seg.s.y, seg.e.x, seg.e.y);
                         draw_line(hdc, seg, RGB(255, 0, 0));
@@ -363,6 +329,49 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                 }
             }
             break;
+        }
+
+
+        // 计算并绘制图元的 Box
+        lsBox entbox = ls_entity_get_box(entity);
+        lsPolygon* polygon = NULL;
+        ls_polygon_from_box(&entbox, &polygon);
+
+        if (polygon != NULL)
+        {
+            // 遍历 polygon，绘制每条边
+            for (lsListIterator polyIt = ls_list_iterator_start(polygon->edges); !ls_list_iterator_done(&polyIt); ls_list_iterator_step(&polyIt))
+            {
+                lsLineSegment* pSeg = (lsLineSegment*)ls_list_iterator_get_data(&polyIt);
+                lsLineSegment seg = *pSeg;
+
+                seg.s.x -= entityCenter.x;
+                seg.s.y -= entityCenter.y;
+                seg.e.x -= entityCenter.x;
+                seg.e.y -= entityCenter.y;
+                seg.s.x *= scale;
+                seg.s.y *= scale;
+                seg.e.x *= scale;
+                seg.e.y *= scale;
+                seg.s.x += windowCenter.x;
+                seg.s.y += windowCenter.y;
+                seg.e.x += windowCenter.x;
+                seg.e.y += windowCenter.y;
+                seg.s.x -= windowOrigin.x;
+                seg.s.y -= windowOrigin.y;
+                seg.e.x -= windowOrigin.x;
+                seg.e.y -= windowOrigin.y;
+
+                // 因为窗口坐标系y轴是向下的，所以需要变换一下，先沿图元Y轴正向移动窗口高度到达窗口原点，再将Y轴反向
+                seg.s.y = windowHeight - seg.s.y;
+                seg.e.y = windowHeight - seg.e.y;
+
+                ls_log_info("draw box line : s(%f, %f), e(%f, %f)\n", seg.s.x, seg.s.y, seg.e.x, seg.e.y);
+                draw_line(hdc, seg, RGB(0, 255, 0)); // 绘制图元的 box 边界
+            }
+
+            // 销毁 polygon，释放内存
+            ls_polygon_destroy(&polygon);
         }
     }
 }

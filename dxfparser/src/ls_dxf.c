@@ -1,6 +1,7 @@
 ﻿#include <string.h> // for memset
 #include <stdlib.h> // for atoi
 #include <assert.h> // for assert
+#include <math.h> // for cos/sin
 
 #include "ls_dxf.h"
 #include "ls_log.h"
@@ -251,6 +252,9 @@ bool ls_dxf_process_arc(lsDxf* dxf)
     int code;
     lsVector start = { 0, 0 }, end = { 0, 0 }, center = { 0, 0 };
     bool bccw = true; // 默认设置为逆时针
+    lsReal radius = 0;
+    lsReal sangle = 0;
+    lsReal eangle = 0;
 
     while (1)
     {
@@ -261,6 +265,22 @@ bool ls_dxf_process_arc(lsDxf* dxf)
         {
         case 0:
         {
+            // 先将角度规整到0-360内
+            sangle = ls_utils_angle_normalize(sangle);
+            eangle = ls_utils_angle_normalize(eangle);
+
+            // 起点角度小于终点角度，圆弧方向为逆时针
+            if (sangle < eangle)
+                bccw = true;
+            else
+                bccw = false;
+
+            // 计算起点和终点
+            start.x = center.x + radius * cos(sangle * LS_PI / 180.0);
+            start.y = center.y + radius * sin(sangle * LS_PI / 180.0);
+            end.x = center.x + radius * cos(eangle * LS_PI / 180.0);
+            end.y = center.y + radius * sin(eangle * LS_PI / 180.0);
+            
             lsEntity* pEnt = ls_entity_create_arc(start, end, center, bccw);
             assert(pEnt);
             ls_list_append(dxf->list, pEnt);
@@ -269,39 +289,29 @@ bool ls_dxf_process_arc(lsDxf* dxf)
         }
         break;
 
-        // 10 组码对应圆弧起点的 X 坐标
+        // 10 组码对应圆弧中心的 X 坐标
         case 10:
-            start.x = (lsReal)atof(ls_dxf_get_row_string(dxf));
-            break;
-
-            // 20 组码对应圆弧起点的 Y 坐标
-        case 20:
-            start.y = (lsReal)atof(ls_dxf_get_row_string(dxf));
-            break;
-
-            // 11 组码对应圆弧终点的 X 坐标
-        case 11:
-            end.x = (lsReal)atof(ls_dxf_get_row_string(dxf));
-            break;
-
-            // 21 组码对应圆弧终点的 Y 坐标
-        case 21:
-            end.y = (lsReal)atof(ls_dxf_get_row_string(dxf));
-            break;
-
-            // 30 组码对应圆心的 X 坐标
-        case 30:
             center.x = (lsReal)atof(ls_dxf_get_row_string(dxf));
             break;
 
-            // 31 组码对应圆心的 Y 坐标
-        case 31:
+        // 20 组码对应圆弧起点的 Y 坐标
+        case 20:
             center.y = (lsReal)atof(ls_dxf_get_row_string(dxf));
             break;
 
-            // 51 组码表示圆弧的旋转方向，0 表示顺时针，1 表示逆时针
+        // 40 组码对应圆弧半径
+        case 40:
+            radius = (lsReal)atof(ls_dxf_get_row_string(dxf));
+            break;
+
+        // 50 组码对应圆弧起点角度
+        case 50:
+            sangle = (lsReal)atof(ls_dxf_get_row_string(dxf));// 角度制，逆时针
+            break;
+
+        // 51 组码对应圆弧终点角度
         case 51:
-            bccw = atoi(ls_dxf_get_row_string(dxf)) != 0;
+            eangle = (lsReal)atof(ls_dxf_get_row_string(dxf));// 角度制，逆时针
             break;
         }
     }
