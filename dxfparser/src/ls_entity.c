@@ -73,7 +73,8 @@ lsBox ls_entity_get_box(const lsEntity *entity)
     
     case enum_geo_arc:
     {
-        // todo
+        lsBox subbox = ls_arc_geo_get_box((lsArc *)entity->entity);
+        ls_box_combine(&box, &subbox);
     }
     break;
     }

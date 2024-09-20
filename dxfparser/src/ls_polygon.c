@@ -62,3 +62,36 @@ lsBox ls_polygon_get_box(const lsPolygon *polygon)
 
     return box;
 }
+
+void ls_polygon_from_box(lsBox* box,lsPolygon** polygon) {
+    
+    if (NULL == box || NULL == polygon)
+        return;
+
+    *polygon = ls_polygon_create();
+    if (NULL == *polygon)
+        return;
+
+    lsVector box_LB=  ls_point_create(box->left,box->bottom);
+    lsVector box_LT = ls_point_create(box->left, box->top);
+    lsVector box_RB = ls_point_create(box->right, box->bottom);
+    lsVector box_RT = ls_point_create(box->right, box->top);
+        
+    lsLineSegment* seg_left = ls_line_segment_create(box_LB, box_LT);
+    lsLineSegment* seg_bottom = ls_line_segment_create(box_LB, box_RB);
+    lsLineSegment* seg_right = ls_line_segment_create(box_RB, box_RT);
+    lsLineSegment* seg_top= ls_line_segment_create(box_RT, box_LT);
+    
+    if (seg_left && seg_bottom && seg_right && seg_top) {
+        ls_polygon_append_seg(*polygon,*seg_left);
+        ls_polygon_append_seg(*polygon, *seg_bottom);
+        ls_polygon_append_seg(*polygon, *seg_right);
+        ls_polygon_append_seg(*polygon, *seg_top);
+    }
+    // 清理内存，释放临时创建的线段
+    ls_line_segment_destroy(&seg_left);
+    ls_line_segment_destroy(&seg_bottom);
+    ls_line_segment_destroy(&seg_right);
+    ls_line_segment_destroy(&seg_top);
+
+}

@@ -17,3 +17,5 @@ void ls_polygon_destroy(lsPolygon **root);
 void ls_polygon_append_seg(lsPolygon *polygon, lsLineSegment seg);
 
 lsBox ls_polygon_get_box(const lsPolygon *polygon);
+
+void ls_polygon_from_box(lsBox* box, lsPolygon** polygon);

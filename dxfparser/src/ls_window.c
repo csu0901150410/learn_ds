@@ -122,8 +122,8 @@ void ls_window_read_dxf(HWND hwnd)
 {
     lsDxf *dxfReader = ls_dxf_create();
 
-    // ls_dxf_init(dxfReader, "dxf/arc.dxf");
-    ls_dxf_init(dxfReader, "dxf/polygon.dxf");
+     ls_dxf_init(dxfReader, "dxf/arc.dxf");
+    //ls_dxf_init(dxfReader, "dxf/polygon.dxf");
     ls_dxf_parse(dxfReader);
     
 
@@ -197,6 +197,45 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
         if (NULL == entity)
             continue;
 
+        // 计算并绘制图元的 Box
+        lsBox entbox = ls_entity_get_box(entity);
+        lsPolygon* polygon = NULL;
+        ls_polygon_from_box(&entbox, &polygon);
+
+        if (polygon != NULL)
+        {
+            // 遍历 polygon，绘制每条边
+            for (lsListIterator polyIt = ls_list_iterator_start(polygon->edges); !ls_list_iterator_done(&polyIt); ls_list_iterator_step(&polyIt))
+            {
+                lsLineSegment* pSeg = (lsLineSegment*)ls_list_iterator_get_data(&polyIt);
+                lsLineSegment seg = *pSeg;
+
+                seg.s.x -= entityCenter.x;
+                seg.s.y -= entityCenter.y;
+                seg.e.x -= entityCenter.x;
+                seg.e.y -= entityCenter.y;
+                seg.s.x *= scale;
+                seg.s.y *= scale;
+                seg.e.x *= scale;
+                seg.e.y *= scale;
+                seg.s.x += windowCenter.x;
+                seg.s.y += windowCenter.y;
+                seg.e.x += windowCenter.x;
+                seg.e.y += windowCenter.y;
+                seg.s.x -= windowOrigin.x;
+                seg.s.y -= windowOrigin.y;
+                seg.e.x -= windowOrigin.x;
+                seg.e.y -= windowOrigin.y;
+
+                ls_log_info("draw box line : s(%f, %f), e(%f, %f)\n", seg.s.x, seg.s.y, seg.e.x, seg.e.y);
+                draw_line(hdc, seg, RGB(0, 255, 0)); // 绘制图元的 box 边界
+            }
+
+            // 销毁 polygon，释放内存
+            ls_polygon_destroy(&polygon);
+        }
+
+
         switch (entity->type)
         {
             case enum_geo_segment:
@@ -204,19 +243,9 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                 lsLineSegment* line = (lsLineSegment*)entity->entity;
                 if (NULL != line)
                 {
-                    //ls_log_info("draw line : s(%f, %f), e(%f, %f)\n", line->s.x, line->s.y, line->e.x, line->e.y);
-                    // 临时版本，随便找个放大倍数和偏移坐标，只是为了看到图形，后续应该根据边界矩形来确定放大倍数和偏移坐标
-                    // 后续图元解析、显示可以参考线段这个框架来做
+                  
                     lsLineSegment seg = *line;
-                    // seg.s.x *= 1000;
-                    // seg.s.y *= 1000;
-                    // seg.e.x *= 1000;
-                    // seg.e.y *= 1000;
-                    // seg.s.x += 400;
-                    // seg.s.y += 400;
-                    // seg.e.x += 400;
-                    // seg.e.y += 400;
-
+              
                     // 1.全部图元中心移动到原点
                     // 2.图元缩放
                     // 3.图元移动到屏幕中心
@@ -250,20 +279,40 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                 lsArc* arc = (lsArc*)entity->entity;
                 if (NULL != arc)
                 {
-                    lsArc scaledArc = *arc;
-                    scaledArc.s.x *= 0.1f;
-                    scaledArc.s.y *= 0.1f;
-                    scaledArc.e.x *= 0.1f;
-                    scaledArc.e.y *= 0.1f;
-                    scaledArc.c.x *= 0.1f;
-                    scaledArc.c.y *= 0.1f;
-                    scaledArc.s.x += 0;
-                    scaledArc.s.y += 0;
-                    scaledArc.e.x += 0;
-                    scaledArc.e.y += 0;
-                    scaledArc.c.x += 300;
-                    scaledArc.c.y += 200;
-                    draw_arc(hdc, scaledArc, RGB(0, 255, 0));
+                    lsArc seg = *arc;
+            
+                    seg.s.x -= entityCenter.x;
+                    seg.s.y -= entityCenter.y;
+                    seg.e.x -= entityCenter.x;
+                    seg.e.y -= entityCenter.y;
+                    seg.c.x -= entityCenter.x;
+                    seg.c.y -= entityCenter.y;
+
+                    seg.s.x *= scale;
+                    seg.s.y *= scale;
+                    seg.e.x *= scale;
+                    seg.e.y *= scale;
+                    seg.c.x *= scale;
+                    seg.c.y *= scale;
+
+                    seg.s.x += windowCenter.x;
+                    seg.s.y += windowCenter.y;
+                    seg.e.x += windowCenter.x;
+                    seg.e.y += windowCenter.y;
+                    seg.c.x += windowCenter.x;
+                    seg.c.y += windowCenter.y;
+
+                    seg.s.x -= windowOrigin.x;
+                    seg.s.y -= windowOrigin.y;
+                    seg.e.x -= windowOrigin.x;
+                    seg.e.y -= windowOrigin.y;
+                    seg.c.x -= windowOrigin.x;
+                    seg.c.y -= windowOrigin.y;
+                    draw_arc(hdc, seg, RGB(0, 255, 0));
+
+                    // 记录日志信息
+                    ls_log_info("draw arc : center(%f, %f), start(%f, %f), end(%f, %f)\n",
+                        seg.c.x, seg.c.y, seg.s.x, seg.s.y, seg.e.x, seg.e.y);
                 }
             }
             break;
@@ -279,15 +328,6 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                         lsLineSegment* pSeg = (lsLineSegment*)ls_list_iterator_get_data(&it);
 
                         lsLineSegment seg = *pSeg;
-                        
-                        // seg.s.x *= 0.1f;
-                        // seg.s.y *= 0.1f;
-                        // seg.e.x *= 0.1f;
-                        // seg.e.y *= 0.1f;
-                        // seg.s.x += 0;
-                        // seg.s.y += 0;
-                        // seg.e.x += 0;
-                        // seg.e.y += 0;
                         
                         // 1.全部图元中心移动到原点
                         // 2.图元缩放
