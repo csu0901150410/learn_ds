@@ -33,12 +33,10 @@ double radians_to_angle(double radians) {
     return radians * (180.0 / M_PI);
 }
 
+//弧度
 double angle_center_to_point(lsVector point, lsVector center) {
     double angle = radians_to_angle(atan2(point.y - center.y, point.x - center.x));
-    if (angle < 0) {
-        angle += 360.0;  // 保证角度在0到360度之间
-    }
-    return angle;
+    return angle < 0 ? angle + 360.0 : angle;  // 保证角度在0到360度之间
 }
 bool arc_intersects_angle(double start_angle, double end_angle, double target_angle, bool bccw) {
     if (bccw) {  // 逆时针

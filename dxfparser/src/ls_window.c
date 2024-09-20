@@ -287,7 +287,8 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                     seg.e.y -= entityCenter.y;
                     seg.c.x -= entityCenter.x;
                     seg.c.y -= entityCenter.y;
-
+                    
+                    // 缩放，注意按圆心缩放
                     seg.s.x *= scale;
                     seg.s.y *= scale;
                     seg.e.x *= scale;
@@ -295,6 +296,7 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                     seg.c.x *= scale;
                     seg.c.y *= scale;
 
+                    // 平移回到窗口中心
                     seg.s.x += windowCenter.x;
                     seg.s.y += windowCenter.y;
                     seg.e.x += windowCenter.x;
@@ -302,13 +304,17 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                     seg.c.x += windowCenter.x;
                     seg.c.y += windowCenter.y;
 
+                    // 应用窗口偏移量
                     seg.s.x -= windowOrigin.x;
                     seg.s.y -= windowOrigin.y;
                     seg.e.x -= windowOrigin.x;
                     seg.e.y -= windowOrigin.y;
                     seg.c.x -= windowOrigin.x;
                     seg.c.y -= windowOrigin.y;
+
                     draw_arc(hdc, seg, RGB(0, 255, 0));
+
+
 
                     // 记录日志信息
                     ls_log_info("draw arc : center(%f, %f), start(%f, %f), end(%f, %f)\n",
