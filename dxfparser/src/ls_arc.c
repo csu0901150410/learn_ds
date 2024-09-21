@@ -58,42 +58,7 @@ bool arc_intersects_angle(double start_angle, double end_angle, double target_an
 }
 
 lsBox ls_arc_geo_get_box(const lsArc* arc){
-    // lsBox box;
-    // ls_box_init(&box); // 初始化边界框
-
-    // if (NULL == arc)
-    //     return box;
-    
-    //     // 计算起点和终点的角度
-    //     lsReal start_angle = angle_center_to_point(arc->s, arc->c);
-    //     lsReal end_angle = angle_center_to_point(arc->e, arc->c);
-    //     // 半径
-    //     lsReal radius = sqrt(pow(arc->s.x - arc->c.x, 2) + pow(arc->s.y - arc->c.y, 2));
-    //     // box的初始边界
-    //     box.left = min(arc->s.x, arc->e.x);
-    //     box.right = max(arc->s.x, arc->e.x);
-    //     box.bottom = min(arc->s.y, arc->e.y);
-    //     box.top = max(arc->s.y, arc->e.y);
-
-    // //检查是否超过坐标轴
-    // // 检查与 x 轴相交（0°）
-    // if (arc_intersects_angle(start_angle, end_angle, 0, arc->bccw)) {
-    //     box.right = max(box.right, arc->c.x + radius);
-    // }
-    // // 检查与 y 轴相交（90°）
-    // if (arc_intersects_angle(start_angle, end_angle, 90, arc->bccw)) {
-    //     box.top = max(box.top, arc->c.y + radius);
-    // }
-    // // 检查与 x 轴相交（180°）
-    // if (arc_intersects_angle(start_angle, end_angle, 180, arc->bccw)) {
-    //     box.top = max(box.top, arc->c.y + radius);
-    // }
-    // // 检查与 x 轴相交（270°）
-    // if (arc_intersects_angle(start_angle, end_angle, 270, arc->bccw)) {
-    //     box.top = max(box.top, arc->c.y + radius);
-    // }
-    // return box;
-
+   
     // 基本思路
     // 1.计算起点终点的角度
     // 2.根据起点终点角度，判断圆弧跨过哪几条坐标轴
@@ -161,7 +126,7 @@ lsReal ls_arc_get_start_angle(const lsArc *arc)
     os.y = arc->s.y - arc->c.y;
 
     // 半径向量和(1, 0)的夹角
-    lsReal angle = atan2(os.y, os.x);
+    lsReal angle = (lsReal)atan2(os.y, os.x);
     if (angle < 0)
         angle += 2 * LS_PI;// 调整到[0, 2PI)
     return angle;// 返回弧度
@@ -175,7 +140,7 @@ lsReal ls_arc_get_end_angle(const lsArc *arc)
     oe.y = arc->e.y - arc->c.y;
 
     // 半径向量和(1, 0)的夹角
-    lsReal angle = atan2(oe.y, oe.x);
+    lsReal angle = (lsReal)atan2(oe.y, oe.x);
     if (angle < 0)
         angle += 2 * LS_PI;// 调整到[0, 2PI)
     return angle;// 返回弧度

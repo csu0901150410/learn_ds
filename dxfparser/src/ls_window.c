@@ -9,6 +9,7 @@
 #include "ls_list.h"
 #include "ls_entity.h"
 #include "ls_polygon.h"
+#include "ls_Matrix.h"
 
 
 #define M_PI 3.14159265358979323846
@@ -191,6 +192,8 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
     lsPoint windowOrigin = {windowbox.left, windowbox.bottom};
 
     lsReal windowHeight = ls_box_height(&windowbox);
+
+    
 
     // 遍历链表，取出图元，进行绘制
     for (lsListIterator it = ls_list_iterator_start(dxf->list); !ls_list_iterator_done(&it); ls_list_iterator_step(&it))
