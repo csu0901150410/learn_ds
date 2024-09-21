@@ -19,7 +19,9 @@ lsReal ls_vector_get_length(const lsVector *v)
 void ls_matrix_transform_point(lsMatrix* matrix, lsVector* point) {
     lsReal x = point->x;
     lsReal y = point->y;
+    lsReal z = 1;
 
-    point->x = x * matrix->m[0][0] + y * matrix->m[1][0] + matrix->m[2][0];
-    point->y = x * matrix->m[0][1] + y * matrix->m[1][1] + matrix->m[2][1];
+    point->x = x * matrix->m[0][0] + y * matrix->m[0][1] + z * matrix->m[0][2];
+    point->y = x * matrix->m[1][0] + y * matrix->m[1][1] + z * matrix->m[1][2];
+    point->z = 1.0f;
 }

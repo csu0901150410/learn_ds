@@ -17,3 +17,5 @@ void ls_line_segment_destroy(lsLineSegment **root);
 lsBox ls_line_segment_get_box(const lsLineSegment *line);
 
 void ls_matrix_transform_line(lsMatrix* matrix, lsLineSegment* line);
+
+lsPoint ls_line_segment_get_mid(const lsLineSegment *line);

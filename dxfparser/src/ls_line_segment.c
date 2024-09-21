@@ -45,3 +45,11 @@ void ls_matrix_transform_line(lsMatrix* matrix, lsLineSegment* line) {
     ls_matrix_transform_point(matrix, &(line->s));
     ls_matrix_transform_point(matrix, &(line->e));
 }
+
+lsPoint ls_line_segment_get_mid(const lsLineSegment *line)
+{
+    lsPoint mid;
+    mid.x = (line->s.x + line->e.x) / 2;
+    mid.y = (line->s.y + line->e.y) / 2;
+    return mid;
+}

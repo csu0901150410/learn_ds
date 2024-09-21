@@ -152,6 +152,26 @@ lsBox ls_window_get_window_box(HWND hwnd)
 
 // 尽量不要定义全局变量
 
+void test_matrix(HDC hdc, lsReal w, lsReal h)
+{
+    lsLineSegment seg = {{w / 4, h / 2}, {w * 3 / 4, h / 2}};
+    draw_line(hdc, seg, CLR_WHITE);
+    
+    lsMatrix translate;
+    ls_matrix_identity(&translate);
+
+    lsPoint mid = ls_line_segment_get_mid(&seg);
+    ls_matrix_translate(&translate, -mid.x, -mid.y);
+    ls_matrix_scale(&translate, 0.5, 0.5);
+    ls_matrix_rotate(&translate, 90);
+    ls_matrix_translate(&translate, mid.x, mid.y);
+    // ls_matrix_rotate(&translate, 90);
+    
+    lsLineSegment trans_seg = seg;
+    ls_matrix_transform_line(&translate, &trans_seg);
+    draw_line(hdc, trans_seg, CLR_RED);
+}
+
 void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
 {
     if (NULL == dxf || NULL == dxf->list)
@@ -176,6 +196,8 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
     lsBox windowbox = ls_window_get_window_box(hwnd);
     if (!ls_box_valid(&windowbox))
         return;
+        
+    test_matrix(hdc, ls_box_width(&windowbox), ls_box_height(&windowbox));
 
     // 计算图元坐标变换到屏幕坐标的缩放系数，该系数由屏幕坐标/图元坐标得到
     lsReal entw = ls_box_width(&box), enth = ls_box_height(&box);
@@ -455,7 +477,7 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                 seg.e.y = windowHeight - seg.e.y;
 
                 ls_log_info("draw box line : s(%f, %f), e(%f, %f)\n", seg.s.x, seg.s.y, seg.e.x, seg.e.y);
-                draw_line(hdc, seg, RGB(0, 255, 0)); // 绘制图元的 box 边界
+                // draw_line(hdc, seg, RGB(0, 255, 0)); // 绘制图元的 box 边界
             }
             //ls_matrix_transform_polygon(&transformMatrix, &polygon);
           }

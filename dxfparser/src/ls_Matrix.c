@@ -1,4 +1,5 @@
-
+#include <string.h>
+#include <math.h>
 
 #include "ls_Matrix.h"
 #include "ls_defs.h"
@@ -33,7 +34,7 @@ void ls_matrix_scale(lsMatrix* matrix, lsReal sx, lsReal sy) {
     ls_matrix_identity(&scaling);
     scaling.m[0][0] = sx;
     scaling.m[1][1] = sy;
-    ls_matrix_multiply(matrix, matrix, &scaling);
+    ls_matrix_multiply(matrix, &scaling, matrix);
 }
 
 void ls_matrix_rotate(lsMatrix* matrix, lsReal angle) {
@@ -46,7 +47,7 @@ void ls_matrix_rotate(lsMatrix* matrix, lsReal angle) {
     rotation.m[1][0] = sin(radians);
     rotation.m[1][1] = cos(radians);
 
-    ls_matrix_multiply(matrix, matrix, &rotation);
+    ls_matrix_multiply(matrix, &rotation, matrix);
 }
 
 
