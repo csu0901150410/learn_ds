@@ -154,3 +154,15 @@ lsReal ls_arc_get_radius(const lsArc *arc)
     os.y = arc->s.y - arc->c.y;
     return ls_vector_get_length(&os);
 }
+
+void ls_matrix_transform_arc(lsMatrix* matrix, lsArc* arc) {
+    if (arc == NULL) {
+        return;
+    }
+
+    // 对圆弧的起点、终点和圆心应用矩阵变换
+    ls_matrix_transform_point(matrix, &arc->s);  // 变换起点
+    ls_matrix_transform_point(matrix, &arc->e);  // 变换终点
+    ls_matrix_transform_point(matrix, &arc->c);  // 变换圆心
+}
+

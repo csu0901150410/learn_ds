@@ -36,3 +36,12 @@ lsBox ls_line_segment_get_box(const lsLineSegment *line)
     
     return box;
 }
+
+void ls_matrix_transform_line(lsMatrix* matrix, lsLineSegment* line) {
+    if (line == NULL) {
+        return;
+    }
+
+    ls_matrix_transform_point(matrix, &(line->s));
+    ls_matrix_transform_point(matrix, &(line->e));
+}

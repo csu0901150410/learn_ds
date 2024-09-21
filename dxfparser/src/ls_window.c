@@ -123,8 +123,8 @@ void ls_window_read_dxf(HWND hwnd)
 {
     lsDxf *dxfReader = ls_dxf_create();
 
-    ls_dxf_init(dxfReader, "dxf/arc.dxf");
-    //ls_dxf_init(dxfReader, "dxf/polygon.dxf");
+    //ls_dxf_init(dxfReader, "dxf/arc.dxf");
+    ls_dxf_init(dxfReader, "dxf/polygon.dxf");
     ls_dxf_parse(dxfReader);
     
 
@@ -186,14 +186,34 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
     // 取较小者进行放大，如果取较大者进行放大，有一边会超出
     lsReal scale = MIN(scalex, scaley) * 0.9;// 乘一个系数，不然边缘看不到
 
-    // 看来还要定义一些向量运算和矩阵运算的函数
+    // 计算中心点和原点
     lsPoint entityCenter = ls_box_center(&box);
     lsPoint windowCenter = ls_box_center(&windowbox);
     lsPoint windowOrigin = {windowbox.left, windowbox.bottom};
 
     lsReal windowHeight = ls_box_height(&windowbox);
 
-    
+    // 初始化矩阵
+    //lsMatrix transformMatrix;
+    //ls_matrix_identity(&transformMatrix);
+
+    //// 平移： 全部图元中心移动到原点
+    //ls_matrix_translate(&transformMatrix, -entityCenter.x, -entityCenter.y);
+
+    //// 缩放
+    //ls_matrix_scale(&transformMatrix, scale, scale);
+
+    //// 平移： 移动到屏幕中心
+    //ls_matrix_translate(&transformMatrix, windowCenter.x, windowCenter.y);
+
+    //ls_matrix_translate(&transformMatrix, -windowOrigin.x, -windowOrigin.y);
+
+    //ls_matrix_scale(&transformMatrix, 1.0, -1.0); // X 轴保持不变，Y 轴取反
+    //ls_matrix_translate(&transformMatrix, 0, windowHeight); // 2. 再沿 Y 轴向下平移 windowHeight
+
+
+  
+
 
     // 遍历链表，取出图元，进行绘制
     for (lsListIterator it = ls_list_iterator_start(dxf->list); !ls_list_iterator_done(&it); ls_list_iterator_step(&it))
@@ -217,27 +237,30 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                     // 3.图元移动到屏幕中心
                     // 4.屏幕坐标转窗口坐标
 
-                    seg.s.x -= entityCenter.x;
-                    seg.s.y -= entityCenter.y;
-                    seg.e.x -= entityCenter.x;
-                    seg.e.y -= entityCenter.y;
-                    seg.s.x *= scale;
-                    seg.s.y *= scale;
-                    seg.e.x *= scale;
-                    seg.e.y *= scale;
-                    seg.s.x += windowCenter.x;
-                    seg.s.y += windowCenter.y;
-                    seg.e.x += windowCenter.x;
-                    seg.e.y += windowCenter.y;
-                    seg.s.x -= windowOrigin.x;
-                    seg.s.y -= windowOrigin.y;
-                    seg.e.x -= windowOrigin.x;
-                    seg.e.y -= windowOrigin.y;
-
-                    // 因为窗口坐标系y轴是向下的，所以需要变换一下，先沿图元Y轴正向移动窗口高度到达窗口原点，再将Y轴反向
-                    seg.s.y = windowHeight - seg.s.y;
-                    seg.e.y = windowHeight - seg.e.y;
                     
+                   // seg.s.x -= entityCenter.x;
+                   // seg.s.y -= entityCenter.y;
+                   // seg.e.x -= entityCenter.x;
+                   // seg.e.y -= entityCenter.y;
+                   // seg.s.x *= scale;
+                   // seg.s.y *= scale;
+                   // seg.e.x *= scale;
+                   // seg.e.y *= scale;
+                   // seg.s.x += windowCenter.x;
+                   // seg.s.y += windowCenter.y;
+                   // seg.e.x += windowCenter.x;
+                   // seg.e.y += windowCenter.y;
+                   // seg.s.x -= windowOrigin.x;
+                   // seg.s.y -= windowOrigin.y;
+                   // seg.e.x -= windowOrigin.x;
+                   // seg.e.y -= windowOrigin.y;
+                   //  
+                   ////  因为窗口坐标系y轴是向下的，所以需要变换一下，先沿图元Y轴正向移动窗口高度到达窗口原点，再将Y轴反向
+                   // seg.s.y = windowHeight - seg.s.y;
+                   // seg.e.y = windowHeight - seg.e.y;
+                   // 
+                    //ls_matrix_transform_line(&transformMatrix,&seg);
+
                     ls_log_info("draw line : s(%f, %f), e(%f, %f)\n", seg.s.x, seg.s.y, seg.e.x, seg.e.y);
                     draw_line(hdc, seg, RGB(255, 0, 0));
                 }
@@ -251,7 +274,7 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                 {
                     lsArc seg = *arc;
 
-                    // 计算出起点终点的弧度，以便平移圆心、放缩半径后重新计算开始点结束点
+                    //// 计算出起点终点的弧度，以便平移圆心、放缩半径后重新计算开始点结束点
                     lsReal sangle = ls_arc_get_start_angle(arc);
                     lsReal eangle = ls_arc_get_end_angle(arc);
                     lsReal radius = ls_arc_get_radius(arc);
@@ -277,9 +300,43 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                     seg.e.y = windowHeight - seg.e.y;
                     seg.c.y = windowHeight - seg.c.y;
 
+            // 使用矩阵进行坐标变换
+           
+                    //lsMatrix transformMatrix;
+                    //ls_matrix_identity(&transformMatrix);
+
+                    //// 将圆心移到原点
+                    //ls_matrix_translate(&transformMatrix, -entityCenter.x, -entityCenter.y);
+
+                    ////缩放圆心
+                    //ls_matrix_scale(&transformMatrix, scale, scale);
+
+                    ////圆心移到窗口中心
+                    //ls_matrix_translate(&transformMatrix, windowCenter.x, windowCenter.y);
+
+                    ////变换圆心坐标
+                    //ls_matrix_transform_point(&transformMatrix, &seg.c);
+
+                    //// 缩放后的半径
+                    //radius *= scale;
+
+                    //// 重新计算缩放和平移后的起点、终点
+                    //seg.s.x = seg.c.x + radius * cos(sangle);
+                    //seg.s.y = seg.c.y + radius * sin(sangle);
+                    //seg.e.x = seg.c.x + radius * cos(eangle);
+                    //seg.e.y = seg.c.y + radius * sin(eangle);
+
+                    //// 翻转 Y 轴并向下平移 windowHeight
+                    //ls_matrix_identity(&transformMatrix);
+                    //ls_matrix_scale(&transformMatrix, 1.0, -1.0);  // Y 轴翻转
+                    //ls_matrix_translate(&transformMatrix, 0, windowHeight);  // 向下平移 windowHeight
+
+                    //// 应用这个变换到起点、终点和圆心
+                    //ls_matrix_transform_point(&transformMatrix, &seg.s);
+                    //ls_matrix_transform_point(&transformMatrix, &seg.e);
+                    //ls_matrix_transform_point(&transformMatrix, &seg.c);
+
                     draw_arc(hdc, seg, RGB(255, 255, 255));
-
-
 
                     // 记录日志信息
                     ls_log_info("draw arc : center(%f, %f), start(%f, %f), end(%f, %f)\n",
@@ -298,18 +355,22 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                     {
                         lsLineSegment* pSeg = (lsLineSegment*)ls_list_iterator_get_data(&it);
 
-                        lsLineSegment seg = *pSeg;
+                         lsLineSegment seg = *pSeg;
                         
                         // 1.全部图元中心移动到原点
                         // 2.图元缩放
                         // 3.图元移动到屏幕中心
                         // 4.屏幕坐标转窗口坐标
 
-                        seg.s.x -= entityCenter.x;
+                         //ls_matrix_transform_line(&transformMatrix, &seg);
+
+
+                       /* seg.s.x -= entityCenter.x;
                         seg.s.y -= entityCenter.y;
                         seg.e.x -= entityCenter.x;
-                        seg.e.y -= entityCenter.y;
-                        seg.s.x *= scale;
+                        seg.e.y -= entityCenter.y;*/
+
+                        /*seg.s.x *= scale;
                         seg.s.y *= scale;
                         seg.e.x *= scale;
                         seg.e.y *= scale;
@@ -320,11 +381,35 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                         seg.s.x -= windowOrigin.x;
                         seg.s.y -= windowOrigin.y;
                         seg.e.x -= windowOrigin.x;
-                        seg.e.y -= windowOrigin.y;
+                        seg.e.y -= windowOrigin.y;*/
 
                         // 因为窗口坐标系y轴是向下的，所以需要变换一下，先沿图元Y轴正向移动窗口高度到达窗口原点，再将Y轴反向
-                        seg.s.y = windowHeight - seg.s.y;
+                        /*seg.s.y = windowHeight - seg.s.y;
                         seg.e.y = windowHeight - seg.e.y;
+                       */
+
+                       // 初始化变换矩阵
+                         lsMatrix seg_transformMatrix;
+                         ls_matrix_identity(&seg_transformMatrix);
+
+                         // 1. 平移图元中心到原点
+                         ls_matrix_translate(&seg_transformMatrix, -entityCenter.x, -entityCenter.y);
+
+                         // 2. 缩放图元
+                         ls_matrix_scale(&seg_transformMatrix, scale, scale);
+
+                         // 3. 平移图元到窗口中心
+                         ls_matrix_translate(&seg_transformMatrix, windowCenter.x, windowCenter.y);
+
+                         // 4. 翻转 Y 轴
+                         ls_matrix_translate(&seg_transformMatrix, 0, windowHeight); // 将Y轴向下平移 windowHeight
+                         ls_matrix_scale(&seg_transformMatrix, 1.0, -1.0);           // 翻转Y轴
+
+                         // 5. 将窗口的原点偏移到实际原点（窗口坐标转换）
+                         ls_matrix_translate(&seg_transformMatrix, -windowOrigin.x, -windowOrigin.y);
+
+                         // 6. 应用变换矩阵到线段上
+                         ls_matrix_transform_line(&seg_transformMatrix, &seg);
                         
                         ls_log_info("draw line : s(%f, %f), e(%f, %f)\n", seg.s.x, seg.s.y, seg.e.x, seg.e.y);
                         draw_line(hdc, seg, RGB(255, 0, 0));
@@ -372,9 +457,10 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf)
                 ls_log_info("draw box line : s(%f, %f), e(%f, %f)\n", seg.s.x, seg.s.y, seg.e.x, seg.e.y);
                 draw_line(hdc, seg, RGB(0, 255, 0)); // 绘制图元的 box 边界
             }
+            //ls_matrix_transform_polygon(&transformMatrix, &polygon);
+          }
 
             // 销毁 polygon，释放内存
             ls_polygon_destroy(&polygon);
-        }
     }
 }

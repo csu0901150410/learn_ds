@@ -95,3 +95,19 @@ void ls_polygon_from_box(lsBox* box,lsPolygon** polygon) {
     ls_line_segment_destroy(&seg_top);
 
 }
+
+void ls_matrix_transform_polygon(lsMatrix* matrix, lsPolygon* polygon) {
+    if (polygon == NULL || polygon->edges == NULL) {
+        return;
+    }
+
+    for (lsListIterator it = ls_list_iterator_start(polygon->edges);
+        !ls_list_iterator_done(&it);
+        ls_list_iterator_step(&it)) {
+
+        lsLineSegment* edge = (lsLineSegment*)ls_list_iterator_get_data(&it);
+        if (edge != NULL) {
+            ls_matrix_transform_line(matrix, edge);
+        }
+    }
+}
