@@ -26,7 +26,7 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf);
 
 /**
  * @brief.通用转换
- * 
+ *
  * \param entityCenter
  * \param scale
  * \param windowCenter
@@ -35,6 +35,6 @@ void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf);
  * \return lsMatrix
  */
 lsMatrix generate_transform_matrix(lsPoint entityCenter, lsReal scale,
-    lsPoint windowCenter, lsPoint windowOrigin, lsReal windowHeight);
+                                   lsPoint windowCenter, lsPoint windowOrigin, lsReal windowHeight);
 
-#endif// __LS_WINDOW_H__
+#endif // __LS_WINDOW_H__
