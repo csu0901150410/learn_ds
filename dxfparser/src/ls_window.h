@@ -24,4 +24,17 @@ lsBox ls_window_get_window_box(HWND hwnd);
 
 void ls_window_draw_shapes(HWND hwnd, HDC hdc, const lsDxf *dxf);
 
+/**
+ * @brief.通用转换
+ * 
+ * \param entityCenter
+ * \param scale
+ * \param windowCenter
+ * \param windowOrigin
+ * \param windowHeight
+ * \return lsMatrix
+ */
+lsMatrix generate_transform_matrix(lsPoint entityCenter, lsReal scale,
+    lsPoint windowCenter, lsPoint windowOrigin, lsReal windowHeight);
+
 #endif// __LS_WINDOW_H__
