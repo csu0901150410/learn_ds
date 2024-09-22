@@ -4,7 +4,7 @@
 
 #include "ls_line_segment.h"
 #include "ls_box.h"
-#include "ls_Matrix.h"
+#include "ls_matrix.h"
 
 typedef struct
 {
@@ -18,6 +18,8 @@ void ls_polygon_destroy(lsPolygon **root);
 void ls_polygon_append_seg(lsPolygon *polygon, lsLineSegment seg);
 
 lsBox ls_polygon_get_box(const lsPolygon *polygon);
+
+void ls_polygon_transform(lsPolygon *polygon, const lsMatrix *matrix);
 
 void ls_polygon_from_box(lsBox* box, lsPolygon** polygon);
 

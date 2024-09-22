@@ -27,7 +27,7 @@
     <ClCompile Include="src\ls_line_segment.c" />
     <ClCompile Include="src\ls_list.c" />
     <ClCompile Include="src\ls_log.c" />
-    <ClCompile Include="src\ls_Matrix.c" />
+    <ClCompile Include="src\ls_matrix.c" />
     <ClCompile Include="src\ls_pen.c" />
     <ClCompile Include="src\ls_polygon.c" />
     <ClCompile Include="src\ls_draw_shapes.c" />
@@ -46,7 +46,7 @@
     <ClInclude Include="src\ls_line_segment.h" />
     <ClInclude Include="src\ls_list.h" />
     <ClInclude Include="src\ls_log.h" />
-    <ClInclude Include="src\ls_Matrix.h" />
+    <ClInclude Include="src\ls_matrix.h" />
     <ClInclude Include="src\ls_pen.h" />
     <ClInclude Include="src\ls_polygon.h" />
     <ClInclude Include="src\ls_draw_shapes.h" />

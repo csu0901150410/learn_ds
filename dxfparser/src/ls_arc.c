@@ -155,6 +155,13 @@ lsReal ls_arc_get_radius(const lsArc *arc)
     return ls_vector_get_length(&os);
 }
 
+void ls_arc_transform(lsArc *arc, const lsMatrix *matrix)
+{
+    ls_vector_transform(&arc->s, matrix);
+    ls_vector_transform(&arc->e, matrix);
+    ls_vector_transform(&arc->c, matrix);
+}
+
 void ls_matrix_transform_arc(lsMatrix* matrix, lsArc* arc) {
     if (arc == NULL) {
         return;

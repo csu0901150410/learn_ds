@@ -53,3 +53,9 @@ lsPoint ls_line_segment_get_mid(const lsLineSegment *line)
     mid.y = (line->s.y + line->e.y) / 2;
     return mid;
 }
+
+void ls_line_segment_transform(lsLineSegment *line, const lsMatrix *matrix)
+{
+    ls_point_transform(&line->s, matrix);
+    ls_point_transform(&line->e, matrix);
+}

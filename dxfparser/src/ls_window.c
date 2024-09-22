@@ -9,7 +9,7 @@
 #include "ls_list.h"
 #include "ls_entity.h"
 #include "ls_polygon.h"
-#include "ls_Matrix.h"
+#include "ls_matrix.h"
 
 
 #define M_PI 3.14159265358979323846
@@ -154,21 +154,37 @@ lsBox ls_window_get_window_box(HWND hwnd)
 
 void test_matrix(HDC hdc, lsReal w, lsReal h)
 {
+    // lsLineSegment seg = {{w / 4, h / 2}, {w * 3 / 4, h / 2}};
+    // draw_line(hdc, seg, CLR_WHITE);
+    
+    // lsMatrix translate;
+    // ls_matrix_identity(&translate);
+
+    // lsPoint mid = ls_line_segment_get_mid(&seg);
+    
+    // ls_matrix_translate(&translate, -mid.x, -mid.y);
+    // ls_matrix_scale(&translate, 0.5, 0.5);
+    // ls_matrix_rotate(&translate, 90);
+    // ls_matrix_translate(&translate, mid.x, mid.y);
+    
+    // lsLineSegment trans_seg = seg;
+    // ls_matrix_transform_line(&translate, &trans_seg);
+    // draw_line(hdc, trans_seg, CLR_RED);
+
+
+    // 重写这个变换的过程
     lsLineSegment seg = {{w / 4, h / 2}, {w * 3 / 4, h / 2}};
     draw_line(hdc, seg, CLR_WHITE);
-    
-    lsMatrix translate;
-    ls_matrix_identity(&translate);
 
     lsPoint mid = ls_line_segment_get_mid(&seg);
-    ls_matrix_translate(&translate, -mid.x, -mid.y);
-    ls_matrix_scale(&translate, 0.5, 0.5);
-    ls_matrix_rotate(&translate, 90);
-    ls_matrix_translate(&translate, mid.x, mid.y);
-    // ls_matrix_rotate(&translate, 90);
-    
+    lsMatrix tozero = ls_matrix_set_translate(-mid.x, -mid.y);
+    lsMatrix matscale = ls_matrix_set_scale(0.5, 0.5);
+    lsMatrix matrot = ls_matrix_set_rotate360(90);
+    lsMatrix tocenter = ls_matrix_set_translate(mid.x, mid.y);
+    lsMatrix transform = ls_matrix_multiply_n(4, &tozero, &matscale, &matrot, &tocenter);
+
     lsLineSegment trans_seg = seg;
-    ls_matrix_transform_line(&translate, &trans_seg);
+    ls_line_segment_transform(&trans_seg, &transform);
     draw_line(hdc, trans_seg, CLR_RED);
 }
 

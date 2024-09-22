@@ -32,3 +32,6 @@
 #define CLR_RED     RGB(255, 0, 0)
 #define CLR_GREEN   RGB(0, 255, 0)
 #define CLR_BLUE    RGB(0, 0, 255)
+
+#define RADIAN_2_DEGREE(x) ((x) * 180.0f / LS_PI)
+#define DEGREE_2_RADIAN(x) ((x) * LS_PI / 180.0f)

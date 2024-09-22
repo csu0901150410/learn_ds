@@ -30,3 +30,5 @@ lsEntity *ls_entity_create_polygon(lsPolygon *polygon);
 void ls_entity_destroy(lsEntity **root);
 
 lsBox ls_entity_get_box(const lsEntity *entity);
+
+void ls_entity_transform(lsEntity *entity, const lsMatrix *matrix);

@@ -4,7 +4,7 @@
 
 #include "ls_vector.h"
 #include "ls_box.h"
-#include "ls_Matrix.h"
+#include "ls_matrix.h"
 
 typedef struct
 {
@@ -38,5 +38,7 @@ lsReal ls_arc_get_start_angle(const lsArc *arc);
 lsReal ls_arc_get_end_angle(const lsArc *arc);
 
 lsReal ls_arc_get_radius(const lsArc *arc);
+
+void ls_arc_transform(lsArc *arc, const lsMatrix *matrix);
 
 void ls_matrix_transform_arc(lsMatrix* matrix, lsArc* arc);

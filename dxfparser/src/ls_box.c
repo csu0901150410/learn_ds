@@ -11,6 +11,16 @@ void ls_box_init(lsBox *box)
     box->top = -LS_HUGE;
 }
 
+lsBox ls_box_from_point(lsPoint p1, lsPoint p2)
+{
+    lsBox box;
+    box.left = MIN(p1.x, p2.x);
+    box.right = MAX(p1.x, p2.x);
+    box.bottom = MIN(p1.y, p2.y);
+    box.top = MAX(p1.y, p2.y);
+    return box;
+}
+
 bool ls_box_valid(const lsBox *box)
 {
     if (NULL == box)
@@ -54,4 +64,12 @@ lsPoint ls_box_center(const lsBox *box)
     center.x = (box->left + box->right) / 2;
     center.y = (box->bottom + box->top) / 2;
     return center;
+}
+
+void ls_box_transform(lsBox *box, const lsMatrix *matrix)
+{
+    lsPoint lt = {box->left, box->top}, rb = {box->right, box->bottom};
+    ls_point_transform(&lt, matrix);
+    ls_point_transform(&rb, matrix);
+    *box = ls_box_from_point(lt, rb);
 }

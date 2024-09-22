@@ -51,9 +51,6 @@
     <ClCompile Include="src\ls_box.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ls_Matrix.c">
-      <Filter>src</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ls_list.h">
@@ -99,9 +96,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\ls_box.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ls_Matrix.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

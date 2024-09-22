@@ -1,7 +1,7 @@
-#include <string.h>
+﻿#include <string.h>
 #include <math.h>
 
-#include "ls_Matrix.h"
+#include "ls_matrix.h"
 #include "ls_defs.h"
 
 void ls_matrix_identity(lsMatrix* matrix){
@@ -50,7 +50,62 @@ void ls_matrix_rotate(lsMatrix* matrix, lsReal angle) {
     ls_matrix_multiply(matrix, &rotation, matrix);
 }
 
+lsMatrix ls_matrix_set_identity()
+{
+    lsMatrix matrix;
+    memset(matrix.m, 0, sizeof(matrix.m));
+    matrix.m[0][0] = 1.0;
+    matrix.m[1][1] = 1.0;
+    matrix.m[2][2] = 1.0;
+    return matrix;
+}
 
+lsMatrix ls_matrix_set_translate(lsReal tx, lsReal ty)
+{
+    lsMatrix matrix = ls_matrix_set_identity();
+    matrix.m[0][2] += tx;
+    matrix.m[1][2] += ty;
+    return matrix;
+}
 
+lsMatrix ls_matrix_set_scale(lsReal sx, lsReal sy)
+{
+    lsMatrix matrix = ls_matrix_set_identity();
+    matrix.m[0][0] = sx;
+    matrix.m[1][1] = sy;
+    return matrix;
+}
 
+lsMatrix ls_matrix_set_rotate(lsReal angle)
+{
+    lsMatrix matrix = ls_matrix_set_identity();
+    matrix.m[0][0] = cos(angle);
+    matrix.m[0][1] = -sin(angle);
+    matrix.m[1][0] = sin(angle);
+    matrix.m[1][1] = cos(angle);
+    return matrix;
+}
 
+lsMatrix ls_matrix_set_rotate360(lsReal angle)
+{
+    lsReal radian = DEGREE_2_RADIAN(angle);
+    return ls_matrix_set_rotate(radian);
+}
+
+lsMatrix ls_matrix_multiply_n(int n, ...)
+{
+    lsMatrix result = ls_matrix_set_identity();
+    
+    va_list ap;
+    va_start(ap, n);
+
+    for (int i = 0; i < n; ++i)
+    {
+        const lsMatrix *m = va_arg(ap, lsMatrix*);
+        ls_matrix_multiply(&result, m, &result);
+    }
+
+    va_end(ap);
+
+    return result;
+}

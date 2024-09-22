@@ -63,6 +63,18 @@ lsBox ls_polygon_get_box(const lsPolygon *polygon)
     return box;
 }
 
+void ls_polygon_transform(lsPolygon *polygon, const lsMatrix *matrix)
+{
+    for (lsListIterator it = ls_list_iterator_start(polygon->edges); !ls_list_iterator_done(&it); ls_list_iterator_step(&it))
+    {
+        lsLineSegment *pSeg = (lsLineSegment*)ls_list_iterator_get_data(&it);
+        if (NULL == pSeg)
+            continue;
+            
+        ls_line_segment_transform(pSeg, matrix);
+    }
+}
+
 void ls_polygon_from_box(lsBox* box,lsPolygon** polygon) {
     
     if (NULL == box || NULL == polygon)

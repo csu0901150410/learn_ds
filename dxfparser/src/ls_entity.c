@@ -81,3 +81,31 @@ lsBox ls_entity_get_box(const lsEntity *entity)
 
     return box;
 }
+
+void ls_entity_transform(lsEntity *entity, const lsMatrix *matrix)
+{
+    switch (entity->type)
+    {
+    case enum_geo_segment:
+    {
+        lsLineSegment* seg = (lsLineSegment*)entity->entity;
+        if (NULL != seg)
+            ls_line_segment_transform(seg, matrix);
+    }
+    break;
+
+    case enum_geo_polygon:
+    {
+        lsPolygon* polygon = (lsPolygon*)entity->entity;
+        if (NULL != polygon)
+            ls_matrix_transform_polygon(matrix, polygon);
+    }
+
+    case enum_geo_arc:
+    {
+        lsArc* arc = (lsArc*)entity->entity;
+        if (NULL != arc)
+            ls_arc_transform(arc, matrix);
+    }
+    }
+}

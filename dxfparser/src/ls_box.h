@@ -13,6 +13,8 @@ typedef struct {
 
 void ls_box_init(lsBox *box);
 
+lsBox ls_box_from_point(lsPoint p1, lsPoint p2);
+
 bool ls_box_valid(const lsBox *box);
 
 /**
@@ -28,3 +30,5 @@ lsReal ls_box_width(const lsBox *box);
 lsReal ls_box_height(const lsBox *box);
 
 lsPoint ls_box_center(const lsBox *box);
+
+void ls_box_transform(lsBox *box, const lsMatrix *matrix);
